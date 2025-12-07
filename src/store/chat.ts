@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { ChatState, ChatMessage } from '@/types/chat';
+import { ChatState } from '@/types/chat';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useChatStore = create<ChatState>((set, get) => ({
@@ -56,7 +56,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         artifact: data.artifact 
       });
 
-    } catch (err) {
+    } catch {
       addMessage({ 
         role: 'assistant', 
         content: "I encountered a connection error. Please try again." 

@@ -1,15 +1,17 @@
-export function generateMarkdown(plan: any) {
+import { LaunchPlan } from "@/types";
+
+export function generateMarkdown(plan: LaunchPlan) {
   let md = `# ${plan.plan_title}\n\n`;
   md += `**Mission:** ${plan.plan_description}\n\n`;
   
   md += `## Tool Stack\n`;
-  plan.tool_stack.forEach((t: any) => {
+  plan.tool_stack.forEach((t) => {
     md += `- **${t.tool_name}** (${t.output_type}): ${t.use_case}\n`;
   });
   md += `\n`;
 
   md += `## Execution Steps\n`;
-  plan.steps.forEach((step: any) => {
+  plan.steps.forEach((step) => {
     md += `### Step ${step.step_number}: ${step.title}\n`;
     md += `**Tool:** ${step.tool_used}\n\n`;
     md += `**Objective:** ${step.instruction}\n\n`;
@@ -26,7 +28,7 @@ export function generateMarkdown(plan: any) {
   return md;
 }
 
-export function generateHTML(plan: any) {
+export function generateHTML(plan: LaunchPlan) {
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -58,7 +60,7 @@ export function generateHTML(plan: any) {
 
   <h2>Tool Stack</h2>
   <div class="tool-stack">
-    ${plan.tool_stack.map((t: any) => `
+    ${plan.tool_stack.map((t) => `
       <div class="tool-card">
         <div class="tool-name">${t.tool_name}</div>
         <div class="tool-meta">${t.output_type}</div>
@@ -68,7 +70,7 @@ export function generateHTML(plan: any) {
   </div>
 
   <h2>Execution Steps</h2>
-  ${plan.steps.map((step: any) => `
+  ${plan.steps.map((step) => `
     <div class="step">
       <div class="step-header">
         <div class="step-num">${step.step_number}</div>
@@ -93,7 +95,7 @@ export function generateHTML(plan: any) {
   `;
 }
 
-export function generateJSON(plan: any) {
+export function generateJSON(plan: LaunchPlan) {
   return JSON.stringify(plan, null, 2);
 }
 

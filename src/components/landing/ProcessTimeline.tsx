@@ -31,7 +31,7 @@ export function ProcessTimeline() {
       {/* SECTION HEADER */}
       <div className="text-center mb-20 px-4">
         <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">From Chaos to <span className="text-gradient-primary">Concrete.</span></h2>
-        <p className="text-zinc-400 max-w-2xl mx-auto text-lg">The architecture process is designed to eliminate "Analysis Paralysis" in three steps.</p>
+        <p className="text-zinc-400 max-w-2xl mx-auto text-lg">The architecture process is designed to eliminate &quot;Analysis Paralysis&quot; in three steps.</p>
       </div>
 
       <div className="max-w-6xl mx-auto px-4">

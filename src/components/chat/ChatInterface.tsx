@@ -6,6 +6,12 @@ import { Send, Bot, User, Loader2, RefreshCw, Terminal } from "lucide-react";
 import { clsx } from "clsx";
 import { ToolRevealArtifact } from "./ToolRevealArtifact";
 
+interface InterpretationOption {
+  id: string;
+  label: string;
+  description: string;
+}
+
 export function ChatInterface() {
   const { messages, sendMessage, isLoading, resetChat } = useChatStore();
   const [input, setInput] = useState("");
@@ -86,9 +92,9 @@ export function ChatInterface() {
               )}
 
               {/* INTERPRETATION OPTIONS RENDERER */}
-              {msg.artifact && msg.artifact.type === "INTERPRETATION_OPTIONS" && (
+              {msg.artifact && msg.artifact.type === "INTERPRETATION_OPTIONS" && Array.isArray(msg.artifact.data) && (
                 <div className="mt-4 grid gap-3 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                   {msg.artifact.data.map((option: any) => (
+                   {(msg.artifact.data as unknown as InterpretationOption[]).map((option) => (
                       <button
                         key={option.id}
                         onClick={() => sendMessage(`I choose option ${option.id}: ${option.label}. ${option.description}`)}

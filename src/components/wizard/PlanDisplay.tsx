@@ -4,7 +4,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import { Copy, CheckCircle2, Rocket, Terminal, Layers, Edit2, Save, Loader2, FileText } from "lucide-react";
+import { Copy, CheckCircle2, Rocket, Terminal, Layers, Edit2, Loader2, FileText } from "lucide-react";
 import { useState } from "react";
 import { generateMarkdown, downloadFile } from "@/lib/utils/export";
 
@@ -50,7 +50,7 @@ export function PlanDisplay() {
       setRevisionInput("");
       setIsRevising(false);
       
-    } catch (err) {
+    } catch {
       alert("Failed to revise plan. Please try again.");
     } finally {
       setIsRevisingLoading(false);
@@ -85,7 +85,7 @@ export function PlanDisplay() {
                     <span className="font-bold text-white">{tool.tool_name}</span>
                     <Badge variant="secondary" className="text-[10px] bg-zinc-800 text-zinc-400">{tool.output_type}</Badge>
                  </div>
-                 <p className="text-xs text-zinc-500 line-clamp-2 italic">"{tool.use_case}"</p>
+                 <p className="text-xs text-zinc-500 line-clamp-2 italic">&quot;{tool.use_case}&quot;</p>
               </div>
            ))}
         </div>
@@ -195,7 +195,7 @@ export function PlanDisplay() {
       {/* OTHER INFO */}
       {finalPlan.other_information && (
           <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-xl">
-              <h3 className="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-2">Architect's Notes</h3>
+              <h3 className="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-2">Architect&apos;s Notes</h3>
               <p className="text-sm text-zinc-300">{finalPlan.other_information}</p>
           </div>
       )}

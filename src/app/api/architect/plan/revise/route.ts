@@ -1,17 +1,12 @@
-import {
-  GoogleGenerativeAI
-} from "@google/generative-ai";
-import {
-  NextResponse
-} from "next/server";
-import {
-  z
-} from "zod";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { NextResponse } from "next/server";
+import { z } from "zod";
 import Groq from "groq-sdk";
+import { LaunchPlan } from "@/types";
 
 // Input: The User Request + Current Plan + Revision Instruction
 const ReviseRequestSchema = z.object({
-  currentPlan: z.any(), // We trust the structure for now, or could import LaunchPlanSchema
+  currentPlan: z.custom<LaunchPlan>(),
   userInstruction: z.string()
 });
 
@@ -55,7 +50,7 @@ export async function POST(req: Request) {
 
       rawJSON = result.response.text();
 
-    } catch (geminiError) {
+    } catch {
       // B. Fallback: Groq
       const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || "" });
       const completion = await groq.chat.completions.create({

@@ -61,7 +61,7 @@ export async function POST(req: Request) {
 
     // Prepare messages (System + History)
     // We only keep the last 10 messages to save context/tokens
-    const recentHistory = history.slice(-10).map((m: any) => ({
+    const recentHistory = history.slice(-10).map((m: { role: string; content: string }) => ({
       role: m.role,
       content: m.content
     }));

@@ -21,7 +21,7 @@ export function TechSpecs() {
              </div>
              <h3 className="text-white font-bold">Logic Tree</h3>
              <p className="text-zinc-400 text-sm leading-relaxed">
-                Deterministically maps user intent to specific prompting strategies (e.g., "If Coding &rarr; Use Chain of Thought", "If Creative &rarr; High Temperature").
+                Deterministically maps user intent to specific prompting strategies (e.g., &quot;If Coding → Use Chain of Thought&quot;, &quot;If Creative → High Temperature&quot;).
              </p>
           </div>
 

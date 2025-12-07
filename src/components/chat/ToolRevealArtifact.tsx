@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
-import { SelectionRequest } from "@/types/selection";
 import { Tool } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, ArrowRight, Trophy, ExternalLink, AlertTriangle } from "lucide-react";
+import { Loader2, ArrowRight, Trophy, ExternalLink } from "lucide-react";
 import { useWizardStore } from "@/store/wizard";
 
 interface ToolRevealArtifactProps {
-  selectionData: any; // Using any loosely here to match incoming JSON, but we cast to SelectionRequest
+  selectionData: Record<string, unknown>;
 }
 
 export function ToolRevealArtifact({ selectionData }: ToolRevealArtifactProps) {
@@ -55,7 +54,9 @@ export function ToolRevealArtifact({ selectionData }: ToolRevealArtifactProps) {
 
   const handleProceed = () => {
     if (!tool) return;
-    if (selectionData.userRequest) setUserRequest(selectionData.userRequest);
+    if (selectionData.userRequest && typeof selectionData.userRequest === 'string') {
+      setUserRequest(selectionData.userRequest);
+    }
     setSelectedTool(tool);
     setStep("CONFIRMATION");
   };

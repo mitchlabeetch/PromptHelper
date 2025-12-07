@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Groq from "groq-sdk";
-import { SelectionRequestSchema, SelectionResponseSchema } from "@/types/selection";
+import { SelectionRequestSchema } from "@/types/selection";
 import { filterCandidates } from "@/lib/selection/hard-filter";
 
 // Re-export schema for internal use if needed

@@ -73,7 +73,7 @@ export function ToolReveal() {
           {/* USE CASE */}
           <div className="bg-zinc-800/30 p-4 rounded-lg border border-zinc-700/50 flex flex-col justify-center">
             <span className="text-xs text-zinc-500 uppercase font-bold mb-2">Why this tool?</span>
-            <p className="text-sm text-zinc-300 italic">"{selectedTool.ideal_use_case}"</p>
+            <p className="text-sm text-zinc-300 italic">&quot;{selectedTool.ideal_use_case}&quot;</p>
           </div>
         </CardContent>
 

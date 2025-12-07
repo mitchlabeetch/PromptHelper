@@ -4,6 +4,7 @@ import { z } from "zod";
 import Groq from "groq-sdk";
 import toolsDB from "@/data/tools_database.json";
 import bestPractices from "@/data/best_practices.json";
+import { Tool } from "@/types";
 
 // Input: The User Request + The Tool ID they selected
 const PlanRequestSchema = z.object({
@@ -39,7 +40,7 @@ export async function POST(req: Request) {
     const { userRequest, selectedToolId } = PlanRequestSchema.parse(body);
 
     // 1. Fetch the specific tool data
-    const mainTool = (toolsDB as any[]).find(t => t.id === selectedToolId);
+    const mainTool = (toolsDB as Tool[]).find(t => t.id === selectedToolId);
     if (!mainTool) throw new Error("Invalid Tool ID");
 
     // 2. The Architect Prompt (Enhanced with "User Dream" Logic & Mega-Prompts)

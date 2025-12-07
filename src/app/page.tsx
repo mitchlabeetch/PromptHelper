@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 export default function Home() {
-  const { step, isLoading, error, setStep } = useWizardStore();
+  const { step, error } = useWizardStore();
   const [hasStarted, setHasStarted] = useState(false);
 
   const handleStart = () => {
@@ -110,7 +110,7 @@ export default function Home() {
               <div className="mb-8 text-center sm:text-left">
                  <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-white to-zinc-500 bg-clip-text text-transparent">Describe your vision.</h2>
                  <p className="text-zinc-400 text-sm">
-                   I'll help you refine your idea, then negotiate the perfect tool stack for you.
+                   I&apos;ll help you refine your idea, then negotiate the perfect tool stack for you.
                  </p>
               </div>
               <div className="flex-1">
