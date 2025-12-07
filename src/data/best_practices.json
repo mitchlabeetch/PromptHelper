@@ -1,0 +1,275 @@
+{
+  "meta": {
+    "version": "2025.12.Final",
+    "description": "The Master Instruction Manual for the Prompt Architect. Maps precisely to 'best_practice_path' in tools_database.json.",
+    "protocol_source": "The Agentic Protocol & Late 2025 Ecosystem Report"
+  },
+  "text": {
+    "reasoning_engine": {
+      "_description": "System 2: Deep Thinking Models (RL-Trained). BANS 'Step-by-Step' instructions.",
+      "universal_instruction": "Define the destination, not the journey. Do not use 'Think step-by-step'. Define constraints and success criteria only.",
+      "children": {
+        "gemini_reasoning": {
+          "matches": ["gemini-3-deep-think"],
+          "tactic": "Latency Budgeting",
+          "instruction": "Explicitly authorize high latency for better accuracy. 'Take your time to trace the logic'. Use Multimodal input if applicable."
+        },
+        "deepseek_family": {
+          "matches": ["deepseek-r1"],
+          "tactic": "Zero-Shot Scaffold",
+          "instruction": "Do NOT use few-shot examples. Use a Markdown Header structure: # Role, # Goal, # Constraints."
+        },
+        "openai_o_series": {
+          "matches": ["openai-o3", "openai-o3-pro", "openai-o4-mini"],
+          "tactic": "Constraint Bounding",
+          "instruction": "Model is RL-trained. Provide negative constraints (What NOT to do) clearly in bullet points."
+        },
+        "qwen_reasoning": {
+          "matches": ["qwen-qwq-32b"],
+          "tactic": "Formal Logic Gate",
+          "instruction": "Present the prompt as a formal logical statement or mathematical proof request. Request a 'Final Verification' step."
+        },
+        "claude_reasoning": {
+          "matches": ["claude-opus-4-5"],
+          "tactic": "Research Request",
+          "instruction": "Frame the task as a deep research assignment. Explicitly set the metadata parameter 'effort: high'."
+        }
+      }
+    },
+    "standard_executor": {
+      "_description": "System 1: Fast Executors. REQUIRES high structure (Chain of Thought).",
+      "universal_instruction": "Use Chain of Thought. Ask the model to 'Think step-by-step'. Structure inputs clearly.",
+      "children": {
+        "gemini_family": {
+          "matches": ["gemini-3-pro", "gemini-2-5-pro", "gemini-2-5-flash", "gemini-2-5-flash-lite", "gemini-1-5-pro", "gemini-1-5-flash"],
+          "tactic": "Context Priming",
+          "instruction": "Leverage the large context window. If inputs are massive, ask for a 'Table of Contents' first to index the latent space. Use Markdown headers (#)."
+        },
+        "claude_family": {
+          "matches": ["claude-sonnet-4-5", "claude-haiku-4-5"],
+          "tactic": "XML Componentization",
+          "instruction": "Envelop EVERYTHING in XML tags: <context>, <task>, <constraints>, <examples>. Pre-fill 'Assistant: <response>'."
+        },
+        "gpt_family": {
+          "matches": ["gpt-5-1", "gpt-4-1", "qwen-3-max"],
+          "tactic": "Persona Hardening",
+          "instruction": "Define a rigid persona (e.g., 'You are a Senior SQL Engineer'). Use 'Let's think step by step'."
+        },
+        "llama_family": {
+          "matches": ["llama-4-maverick", "llama-4-scout", "llama-4-behemoth"],
+          "tactic": "Schema Enforcement",
+          "instruction": "Do not trust natural language for output formats. Provide a strict JSON Schema or Pydantic definition in the prompt."
+        },
+        "mistral_family": {
+          "matches": ["mistral-large-3", "deepseek-v3"],
+          "tactic": "Direct Execution",
+          "instruction": "Remove conversational filler. Demand 'Just the code' or 'Concise answer'."
+        }
+      }
+    }
+  },
+  "code": {
+    "agentic_ide": {
+      "_description": "Tools that live in the filesystem.",
+      "universal_instruction": "Use deictic prompting ('this file', 'here') and file anchors ( @filename).",
+      "children": {
+        "cursor": {
+          "matches": ["cursor"],
+          "tactic": "The Constitution",
+          "instruction": "Create a `.cursorrules` file first. Use 'Composer' mode (Cmd+I) and reference files with @."
+        },
+        "windsurf": {
+          "matches": ["windsurf", "github-copilot-workspace"],
+          "tactic": "Cascade Flow",
+          "instruction": "Rely on the 'Cascade' agent's memory. Ask it to 'Refactor the function I am looking at'."
+        },
+        "antigravity": {
+          "matches": ["antigravity"],
+          "tactic": "Mission Control",
+          "instruction": "Define a 'Mission' in a `plan.md` file first. The agent follows the plan autonomously."
+        }
+      }
+    },
+    "async_automation": {
+      "_description": "Fire-and-forget agents.",
+      "children": {
+        "jules_agent": {
+          "matches": ["jules-agent"],
+          "tactic": "Ticket Management",
+          "instruction": "Write a 'GitHub Issue': Context + Reproduction Steps + Acceptance Criteria. Do not write code directly."
+        }
+      }
+    },
+    "web_prototyping": {
+      "_description": "Prompt-to-Deploy tools.",
+      "children": {
+        "bolt_new": {
+          "matches": ["bolt-new", "replit-agent-3"],
+          "tactic": "Full-Stack Shot",
+          "instruction": "One massive prompt defining the entire stack: UI (Lucide), Style (Tailwind), and Backend (Supabase)."
+        }
+      }
+    },
+    "pure_generation": {
+      "_description": "Copy-Paste coding.",
+      "children": {
+        "codex": {
+          "matches": ["gpt-5-1-codex", "gpt-5-1-codex-mini"],
+          "tactic": "Self-Contained Snippet",
+          "instruction": "Request complete functions, not diffs. Strict syntax adherence."
+        },
+        "qwen": {
+          "matches": ["qwen-2-5-coder"],
+          "tactic": "Polyglot Precision",
+          "instruction": "Specify the exact library versions (e.g. 'Pytorch 2.4'). Qwen excels at C++ and Python."
+        }
+      }
+    },
+    "cli_ops": {
+      "_description": "Terminal Agents.",
+      "children": {
+        "cli_agent": {
+          "matches": ["gemini-cli", "claude-code"],
+          "tactic": "Pipe & Filter",
+          "instruction": "Pipe logs directly: `cat error.log | model 'fix this'`. Output shell commands only."
+        }
+      }
+    }
+  },
+  "image": {
+    "artistic": {
+      "children": {
+        "midjourney": {
+          "matches": ["midjourney-v7"],
+          "tactic": "Parameter Stacking",
+          "instruction": "Order: [Subject] [Action] [Context]. Use `--sref` (Style) and `--cref` (Character). Use `--omni` for composition."
+        }
+      }
+    },
+    "photorealism": {
+      "children": {
+        "flux": {
+          "matches": ["flux-2-pro", "flux-2-dev", "imagen-4-ultra"],
+          "tactic": "Technical Framing",
+          "instruction": "Describe the gear: 'Shot on 35mm, f/1.8 aperture, ISO 200'. Be descriptive but literal."
+        }
+      }
+    },
+    "typography": {
+      "children": {
+        "ideogram": {
+          "matches": ["ideogram-3"],
+          "tactic": "String Locking",
+          "instruction": "Enclose required text in double quotes: \"Your Text Here\". Describe font placement."
+        }
+      }
+    },
+    "vector_assets": {
+      "children": {
+        "recraft": {
+          "matches": ["recraft-v4"],
+          "tactic": "Style Exclusion",
+          "instruction": "Select 'Vector Art'. Explicitly exclude 'Raster effects', 'Drop shadows', and '3D render'."
+        }
+      }
+    },
+    "semantic_comp": {
+      "children": {
+        "nano_banana": {
+          "matches": ["nano-banana-pro"],
+          "tactic": "Logic Composition",
+          "instruction": "Describe spatial relationships logically: 'A is on top of B, which is under C'."
+        }
+      }
+    },
+    "conversational": {
+      "children": {
+        "dalle3": {
+          "matches": ["chatgpt-dall-e-3"],
+          "tactic": "Iterative Dialogue",
+          "instruction": "Start simple. Refine via conversation: 'Now make the cat blue'. Don't use parameters."
+        }
+      }
+    }
+  },
+  "video": {
+    "cinematic_sim": {
+      "children": {
+        "runway": {
+          "matches": ["runway-gen-4-5", "sora-2-pro", "luma-dream-machine"],
+          "tactic": "Camera Vectors",
+          "instruction": "Use camera terms: 'Truck Left', 'Dolly Zoom', 'Crane Up'. Define material physics ('Fluid')."
+        }
+      }
+    },
+    "character_motion": {
+      "children": {
+        "kling": {
+          "matches": ["kling-2-6", "hailuo-2-3"],
+          "tactic": "Motion Brush Sync",
+          "instruction": "Focus on the specific body movement (e.g. 'dancing tango'). Ensure audio sync is requested."
+        }
+      }
+    },
+    "narrative_sync": {
+      "children": {
+        "veo": {
+          "matches": ["veo-3-1"],
+          "tactic": "Timeline Scripting",
+          "instruction": "Use timestamps: '[00:00] Scene start. [00:05] Character speaks'. Define the dialogue."
+        }
+      }
+    }
+  },
+  "audio": {
+    "music": {
+      "children": {
+        "suno": {
+          "matches": ["suno-v5", "udio-2-0"],
+          "tactic": "Meta-Tagging",
+          "instruction": "Tags [Chorus] must go BEFORE lyrics. Use 'Genre Stacking' [Genre: Synthwave Jazz]."
+        }
+      }
+    },
+    "speech": {
+      "children": {
+        "elevenlabs": {
+          "matches": ["elevenlabs"],
+          "tactic": "Actor Description",
+          "instruction": "Describe the 'Actor': 'Gravelly voice, British accent, excited tone'."
+        }
+      }
+    }
+  },
+  "3d": {
+    "assets": {
+      "children": {
+        "meshy": {
+          "matches": ["meshy-4", "rodin-hyper3d"],
+          "tactic": "T-Pose Description",
+          "instruction": "Describe characters in a 'T-Pose' or 'A-Pose' for easier rigging. Define textures (PBR)."
+        }
+      }
+    }
+  },
+  "data": {
+    "deep_research": {
+      "children": {
+        "perplexity": {
+          "matches": ["perplexity-deep-research", "you-com-ari", "genspark"],
+          "tactic": "Question Stacking",
+          "instruction": "Ask a chain of comparison questions. Demand 'Inline Citations' and table outputs."
+        }
+      }
+    },
+    "academic": {
+      "children": {
+        "consensus": {
+          "matches": ["consensus"],
+          "tactic": "Hypothesis Testing",
+          "instruction": "Ask 'Does research support X?'. Focus on peer-reviewed consensus."
+        }
+      }
+    }
+  }
+}
