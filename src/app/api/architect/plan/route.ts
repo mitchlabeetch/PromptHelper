@@ -66,9 +66,16 @@ export async function POST(req: Request) {
       INSTRUCTIONS:
       1. Analyze the 'TARGET PATH' strategies for ${mainTool.name}.
       2. Construct the "Tool Stack". If the user needs images but ${mainTool.name} is text-only, suggest an image generator for that specific step.
+         - Be specific about which tools work best together
+         - For each auxiliary tool, explain its role in the workflow
       3. Create the Steps. 
-         - **Simple Project:** detailed full walkthrough.
-         - **Complex Project:** "Launch Pad" (Setup -> Prototype -> First Output).
+         - **Simple Project:** detailed full walkthrough (3-5 steps).
+         - **Complex Project:** "Launch Pad" (Setup -> Prototype -> First Output) (5-7 steps).
+      4. Ensure prompts are:
+         - Specific and actionable
+         - Include context about the project
+         - Provide clear success criteria
+         - Mention common pitfalls to avoid
       
       CRITICAL: PROMPT QUALITY
       The 'prompt' field must NOT be a short sentence. It must be a **MEGA-PROMPT** designed for an LLM, following this structure:

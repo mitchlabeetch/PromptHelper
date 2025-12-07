@@ -33,6 +33,8 @@ export function ChatInterface() {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
+    } else if (e.key === "Escape") {
+      setInput("");
     }
   };
 

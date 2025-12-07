@@ -19,10 +19,14 @@ export function PlanDisplay() {
 
   if (!finalPlan) return null;
 
-  const copyToClipboard = (text: string, stepNum: number) => {
-    navigator.clipboard.writeText(text);
-    setCopiedStep(stepNum);
-    setTimeout(() => setCopiedStep(null), 2000);
+  const copyToClipboard = async (text: string, stepNum: number) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedStep(stepNum);
+      setTimeout(() => setCopiedStep(null), 2000);
+    } catch {
+      alert('Failed to copy to clipboard. Please try selecting and copying manually.');
+    }
   };
 
   const handleExport = () => {
@@ -97,17 +101,32 @@ export function PlanDisplay() {
            <h3 className="text-violet-300 font-bold mb-2 flex items-center gap-2">
              <Edit2 className="h-4 w-4" /> Adjust Plan
            </h3>
+           <p className="text-zinc-400 text-xs mb-3">Describe the changes you&apos;d like to make to your plan</p>
            <Textarea 
              value={revisionInput}
              onChange={(e) => setRevisionInput(e.target.value)}
-             placeholder="e.g., 'Make the prompts more formal' or 'Add a step for testing'"
-             className="bg-black/40 border-violet-500/20 mb-4"
+             placeholder="e.g., 'Make the prompts more formal and detailed' or 'Add a step for testing the output'"
+             className="bg-black/40 border-violet-500/20 mb-4 min-h-[100px]"
+             disabled={isRevisingLoading}
            />
            <div className="flex gap-3">
-             <Button size="sm" onClick={handleRevise} disabled={isRevisingLoading} className="bg-violet-600 hover:bg-violet-500">
-               {isRevisingLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply Changes"}
+             <Button 
+               size="sm" 
+               onClick={handleRevise} 
+               disabled={isRevisingLoading || !revisionInput.trim()} 
+               className="bg-violet-600 hover:bg-violet-500"
+             >
+               {isRevisingLoading ? (
+                 <>
+                   <Loader2 className="h-4 w-4 animate-spin mr-2" /> Applying...
+                 </>
+               ) : (
+                 "Apply Changes"
+               )}
              </Button>
-             <Button size="sm" variant="ghost" onClick={() => setIsRevising(false)}>Cancel</Button>
+             <Button size="sm" variant="ghost" onClick={() => setIsRevising(false)} disabled={isRevisingLoading}>
+               Cancel
+             </Button>
            </div>
         </div>
       )}
