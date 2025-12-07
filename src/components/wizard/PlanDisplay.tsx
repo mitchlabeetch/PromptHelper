@@ -171,8 +171,8 @@ export function PlanDisplay() {
                       )}
                     </Button>
                   </div>
-                  <ScrollArea className="h-auto max-h-[400px] w-full rounded-xl border border-zinc-800 bg-black/40 shadow-inner">
-                    <pre className="p-6 text-sm font-mono text-zinc-300 leading-relaxed whitespace-pre-wrap selection:bg-violet-500/30">
+                  <ScrollArea className="h-auto max-h-[500px] w-full rounded-xl border border-zinc-800 bg-black/40 shadow-inner overflow-auto">
+                    <pre className="p-6 text-sm font-mono text-zinc-300 leading-relaxed whitespace-pre-wrap break-words selection:bg-violet-500/30 overflow-x-auto">
                       {step.prompt}
                     </pre>
                   </ScrollArea>

@@ -18,7 +18,12 @@ export function ChatInterface() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleSend = async () => {
-    if (!input.trim()) return;
+    const trimmedInput = input.trim();
+    if (!trimmedInput) return;
+    if (trimmedInput.length < 3) {
+      alert("Please provide more details about your project (at least 3 characters).");
+      return;
+    }
     const text = input;
     setInput("");
     await sendMessage(text);
@@ -36,7 +41,7 @@ export function ChatInterface() {
   }, [messages, isLoading]);
 
   return (
-    <div className="flex flex-col min-h-[50vh] max-h-[85vh] h-auto w-full max-w-4xl mx-auto glass-panel rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 ease-in-out animate-in fade-in slide-in-from-bottom-4">
+    <div className="flex flex-col min-h-[60vh] sm:min-h-[50vh] max-h-[85vh] h-auto w-full max-w-4xl mx-auto glass-panel rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 ease-in-out animate-in fade-in slide-in-from-bottom-4">
       
       {/* CHAT HEADER */}
       <div className="flex items-center justify-between px-6 py-3 border-b border-white/5 bg-black/20 backdrop-blur-md">
@@ -50,18 +55,19 @@ export function ChatInterface() {
           onClick={resetChat} 
           className="h-8 w-8 p-0 text-zinc-500 hover:text-zinc-300 hover:bg-white/5 rounded-lg transition-colors"
           title="Reset Session"
+          aria-label="Reset chat session"
         >
           <RefreshCw className="h-4 w-4" />
         </Button>
       </div>
 
       {/* CHAT AREA */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-6 scroll-smooth custom-scrollbar">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-4 sm:space-y-6 scroll-smooth custom-scrollbar">
         {messages.map((msg) => (
           <div
             key={msg.id}
             className={clsx(
-              "flex gap-4 max-w-[90%]",
+              "flex gap-3 sm:gap-4 max-w-[95%] sm:max-w-[90%]",
               msg.role === "user" ? "ml-auto flex-row-reverse" : "mr-auto animate-in fade-in slide-in-from-left-2 duration-300"
             )}
           >
@@ -149,6 +155,8 @@ export function ChatInterface() {
             className="absolute right-2 bottom-2 h-10 w-10 bg-violet-600 hover:bg-violet-500 rounded-lg shadow-[0_0_15px_rgba(124,58,237,0.3)] transition-all hover:scale-105"
             onClick={handleSend}
             disabled={isLoading || !input.trim()}
+            aria-label="Send message"
+            title="Send message"
           >
             <Send className="h-5 w-5 text-white" />
           </Button>
