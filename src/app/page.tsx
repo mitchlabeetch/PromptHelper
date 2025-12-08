@@ -135,9 +135,9 @@ export default function Home() {
               <h3 className="text-xl sm:text-2xl font-bold text-white text-center px-4">Running Sniper Scope...</h3>
               <p className="text-zinc-500 mt-2 font-mono text-xs sm:text-sm text-center px-4">Filtering 68 tools • Calculating capability scores</p>
               <div className="mt-6 flex gap-2">
-                <div className="h-2 w-2 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <div className="h-2 w-2 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <div className="h-2 w-2 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="h-2 w-2 bg-violet-500 rounded-full animate-bounce [animation-delay:0ms]" />
+                <div className="h-2 w-2 bg-violet-500 rounded-full animate-bounce [animation-delay:150ms]" />
+                <div className="h-2 w-2 bg-violet-500 rounded-full animate-bounce [animation-delay:300ms]" />
               </div>
             </div>
           )}
@@ -159,9 +159,9 @@ export default function Home() {
               <h3 className="text-xl sm:text-2xl font-bold text-white text-center px-4">Architecting Prompt Plan...</h3>
               <p className="text-zinc-500 mt-2 font-mono text-xs sm:text-sm text-center px-4">Traversing logic tree • Optimizing constraints</p>
               <div className="mt-6 flex gap-2">
-                <div className="h-2 w-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <div className="h-2 w-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <div className="h-2 w-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="h-2 w-2 bg-emerald-500 rounded-full animate-bounce [animation-delay:0ms]" />
+                <div className="h-2 w-2 bg-emerald-500 rounded-full animate-bounce [animation-delay:150ms]" />
+                <div className="h-2 w-2 bg-emerald-500 rounded-full animate-bounce [animation-delay:300ms]" />
               </div>
             </div>
           )}
