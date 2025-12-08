@@ -100,7 +100,7 @@ export const useWizardStore = create<WizardState>((set, get) => ({
     const { userRequest, capabilities, constraints } = get();
     
     if (userRequest.length < 10) {
-      set({ error: "Please describe your idea in at least 10 characters." });
+      set({ error: "Please describe your idea in more detail (at least 10 characters). This helps us find the perfect tool for you." });
       return;
     }
 
@@ -115,12 +115,16 @@ export const useWizardStore = create<WizardState>((set, get) => ({
 
       const res = await fetch('/api/architect/select', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || "Selection failed");
+      if (!res.ok) {
+        const errorMsg = data.error || "Tool selection failed";
+        throw new Error(errorMsg);
+      }
 
       set({ 
         selectedTool: data.tool, // The Full Tool Object
@@ -129,8 +133,12 @@ export const useWizardStore = create<WizardState>((set, get) => ({
       });
 
     } catch (err) {
+      const errorMessage = err instanceof Error 
+        ? err.message 
+        : "An unexpected error occurred while selecting tools. Please try again.";
+      
       set({ 
-        error: err instanceof Error ? err.message : "An unknown error occurred", 
+        error: errorMessage, 
         step: 'INPUT', // Go back
         isLoading: false 
       });
@@ -140,13 +148,17 @@ export const useWizardStore = create<WizardState>((set, get) => ({
   // API: GENERATE PLAN
   submitPlan: async () => {
     const { userRequest, selectedTool } = get();
-    if (!selectedTool) return;
+    if (!selectedTool) {
+      set({ error: "No tool selected. Please go back and select a tool first." });
+      return;
+    }
 
     set({ isLoading: true, step: 'PLANNING', error: null });
 
     try {
       const res = await fetch('/api/architect/plan', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userRequest,
           selectedToolId: selectedTool.id
@@ -154,7 +166,11 @@ export const useWizardStore = create<WizardState>((set, get) => ({
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Planning failed");
+      
+      if (!res.ok) {
+        const errorMsg = data.error || "Plan generation failed";
+        throw new Error(errorMsg);
+      }
 
       set({ 
         finalPlan: data,
@@ -163,8 +179,12 @@ export const useWizardStore = create<WizardState>((set, get) => ({
       });
 
     } catch (err) {
+      const errorMessage = err instanceof Error 
+        ? err.message 
+        : "Failed to generate your launch plan. Please try again.";
+      
       set({ 
-        error: err instanceof Error ? err.message : "Failed to generate plan", 
+        error: errorMessage, 
         step: 'CONFIRMATION', 
         isLoading: false 
       });

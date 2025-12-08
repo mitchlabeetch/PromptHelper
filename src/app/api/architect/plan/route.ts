@@ -4,6 +4,8 @@ import { z } from "zod";
 import Groq from "groq-sdk";
 import toolsDB from "@/data/tools_database.json";
 import bestPractices from "@/data/best_practices.json";
+import { Tool } from "@/types";
+import { checkRateLimit, getClientIdentifier } from "@/lib/rate-limit";
 
 // Input: The User Request + The Tool ID they selected
 const PlanRequestSchema = z.object({
@@ -35,11 +37,32 @@ const PlanResponseSchema = z.object({
 
 export async function POST(req: Request) {
   try {
+    // Rate limiting: 8 requests per minute per IP (plan generation is more resource-intensive)
+    const clientId = getClientIdentifier(req);
+    const rateLimitResult = checkRateLimit(clientId, { maxRequests: 8, windowMs: 60000 });
+    
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { 
+          error: "Rate limit exceeded. Please wait before making more requests.",
+          retryAfter: Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)
+        },
+        { 
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': '8',
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            'X-RateLimit-Reset': rateLimitResult.resetTime.toString(),
+          }
+        }
+      );
+    }
+
     const body = await req.json();
     const { userRequest, selectedToolId } = PlanRequestSchema.parse(body);
 
     // 1. Fetch the specific tool data
-    const mainTool = (toolsDB as any[]).find(t => t.id === selectedToolId);
+    const mainTool = (toolsDB as Tool[]).find(t => t.id === selectedToolId);
     if (!mainTool) throw new Error("Invalid Tool ID");
 
     // 2. The Architect Prompt (Enhanced with "User Dream" Logic & Mega-Prompts)
@@ -65,9 +88,16 @@ export async function POST(req: Request) {
       INSTRUCTIONS:
       1. Analyze the 'TARGET PATH' strategies for ${mainTool.name}.
       2. Construct the "Tool Stack". If the user needs images but ${mainTool.name} is text-only, suggest an image generator for that specific step.
+         - Be specific about which tools work best together
+         - For each auxiliary tool, explain its role in the workflow
       3. Create the Steps. 
-         - **Simple Project:** detailed full walkthrough.
-         - **Complex Project:** "Launch Pad" (Setup -> Prototype -> First Output).
+         - **Simple Project:** detailed full walkthrough (3-5 steps).
+         - **Complex Project:** "Launch Pad" (Setup -> Prototype -> First Output) (5-7 steps).
+      4. Ensure prompts are:
+         - Specific and actionable
+         - Include context about the project
+         - Provide clear success criteria
+         - Mention common pitfalls to avoid
       
       CRITICAL: PROMPT QUALITY
       The 'prompt' field must NOT be a short sentence. It must be a **MEGA-PROMPT** designed for an LLM, following this structure:
@@ -122,8 +152,21 @@ export async function POST(req: Request) {
 
     let rawJSON = "";
 
-    // A. Attempt 1: Google Gemini 1.5 Flash (Free Tier)
+    // A. Attempt 1: Groq (Llama 3.3 70B - 30 RPM free tier)
     try {
+      const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || "" });
+      const completion = await groq.chat.completions.create({
+        messages: [{ role: "system", content: systemPrompt + "\n\nRETURN JSON ONLY." }],
+        model: "llama-3.3-70b-versatile",
+        temperature: 0.2,
+        response_format: { type: "json_object" }
+      });
+      rawJSON = completion.choices[0]?.message?.content || "{}";
+
+    } catch (groqError) {
+      console.warn("⚠️ Groq Plan Gen Failed. Switching to Gemini...", groqError);
+
+      // B. Fallback: Google Gemini 1.5 Flash
       const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
       const model = genAI.getGenerativeModel({
         model: "gemini-1.5-flash",
@@ -135,19 +178,6 @@ export async function POST(req: Request) {
       });
 
       rawJSON = result.response.text();
-
-    } catch (geminiError) {
-      console.warn("⚠️ Gemini Plan Gen Failed. Switching to Groq...", geminiError);
-
-      // B. Attempt 2: Groq (Llama 3.3 70B Fallback)
-      const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || "" });
-      const completion = await groq.chat.completions.create({
-        messages: [{ role: "system", content: systemPrompt + "\n\nRETURN JSON ONLY." }],
-        model: "llama-3.3-70b-versatile",
-        temperature: 0.2,
-        response_format: { type: "json_object" }
-      });
-      rawJSON = completion.choices[0]?.message?.content || "{}";
     }
 
     // 3. Validation & Parsing

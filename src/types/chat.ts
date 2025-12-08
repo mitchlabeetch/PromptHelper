@@ -1,6 +1,4 @@
-import { z } from "zod";
-import { Tool, LaunchPlan } from "./index";
-import { CapabilityEnum } from "./selection";
+// Types for chat functionality
 
 export type MessageRole = "user" | "assistant" | "system";
 
@@ -16,7 +14,7 @@ export type ArtifactType = "TOOL_SELECTION" | "LAUNCH_PLAN" | "AMBIGUITY_CHECK" 
 
 export interface ChatArtifact {
   type: ArtifactType;
-  data: any; // Typed more specifically in components
+  data: Record<string, unknown>; // Generic object type for flexibility
 }
 
 // State for the Chat Store

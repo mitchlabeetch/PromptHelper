@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
-import { SelectionRequest } from "@/types/selection";
 import { Tool } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, ArrowRight, Trophy, ExternalLink, AlertTriangle } from "lucide-react";
+import { Loader2, ArrowRight, Trophy, ExternalLink } from "lucide-react";
 import { useWizardStore } from "@/store/wizard";
 
 interface ToolRevealArtifactProps {
-  selectionData: any; // Using any loosely here to match incoming JSON, but we cast to SelectionRequest
+  selectionData: Record<string, unknown>;
 }
 
 export function ToolRevealArtifact({ selectionData }: ToolRevealArtifactProps) {
@@ -55,7 +54,9 @@ export function ToolRevealArtifact({ selectionData }: ToolRevealArtifactProps) {
 
   const handleProceed = () => {
     if (!tool) return;
-    if (selectionData.userRequest) setUserRequest(selectionData.userRequest);
+    if (selectionData.userRequest && typeof selectionData.userRequest === 'string') {
+      setUserRequest(selectionData.userRequest);
+    }
     setSelectedTool(tool);
     setStep("CONFIRMATION");
   };
@@ -107,14 +108,15 @@ export function ToolRevealArtifact({ selectionData }: ToolRevealArtifactProps) {
           {/* AUX SQUAD */}
           {auxTools.length > 0 && (
              <div className="pt-4 border-t border-white/5">
-                <span className="text-[10px] text-violet-400 uppercase tracking-widest font-bold mb-3 block flex items-center gap-2">
-                   <Badge variant="default" className="h-1.5 w-1.5 rounded-full p-0 bg-violet-500" /> Tool Squad
+                <span className="text-[10px] text-violet-400 uppercase tracking-widest font-bold mb-3 flex items-center gap-2">
+                   <Badge variant="default" className="h-1.5 w-1.5 rounded-full p-0 bg-violet-500" /> Tool Squad ({auxTools.length})
                 </span>
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-2 gap-2">
                    {auxTools.map(t => (
-                      <Badge key={t.id} variant="secondary" className="bg-white/10 text-zinc-300 hover:bg-white/20 border border-white/5 px-2 py-1">
-                         {t.name}
-                      </Badge>
+                      <div key={t.id} className="bg-white/5 border border-white/5 hover:border-violet-500/30 px-3 py-2 rounded-lg transition-colors">
+                         <div className="text-xs font-medium text-zinc-200">{t.name}</div>
+                         <div className="text-[10px] text-zinc-500">{t.category}</div>
+                      </div>
                    ))}
                 </div>
              </div>

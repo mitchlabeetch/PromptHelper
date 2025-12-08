@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 export default function Home() {
-  const { step, isLoading, error, setStep } = useWizardStore();
+  const { step, error } = useWizardStore();
   const [hasStarted, setHasStarted] = useState(false);
 
   const handleStart = () => {
@@ -37,7 +37,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer group" onClick={handleBackToLanding}>
             <div className="relative h-8 w-8 group-hover:scale-110 transition-transform duration-300">
-               <Image src="/logo.svg" alt="WhiteInputSyndrome Logo" fill className="object-contain" />
+               <Image src="/logo.svg" alt="WhiteInputSyndrome Logo" fill className="object-contain" priority />
             </div>
             <h1 className="text-lg font-bold tracking-tight text-white font-mono">WHITE<span className="text-violet-400">INPUT</span>SYNDROME</h1>
           </div>
@@ -88,29 +88,35 @@ export default function Home() {
           </div>
 
           <footer className="py-8 border-t border-white/5 text-center text-zinc-600 text-sm bg-black/40">
-             <p>Powered by Google Gemini 1.5 Flash & Meta Llama 3.3 70B • Open Source</p>
+             <p>Powered by Groq (Llama 3.3 70B) & Google Gemini • Rate-Limited • Open Source</p>
           </footer>
         </div>
       )}
 
       {/* APP FLOW STATE */}
       {hasStarted && (
-        <div className="max-w-4xl mx-auto px-4 py-24 h-full min-h-screen flex flex-col">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-20 sm:py-24 h-full min-h-screen flex flex-col">
           
           {/* GLOBAL ERROR STATE */}
           {error && (
-            <div className="mb-8 p-4 bg-red-950/30 border border-red-800/50 rounded-lg text-red-200 text-sm animate-in fade-in slide-in-from-top-2">
-              🚨 Error: {error}
+            <div className="mb-6 sm:mb-8 p-4 bg-red-950/30 border border-red-800/50 rounded-lg text-red-200 text-sm animate-in fade-in slide-in-from-top-2">
+              <div className="flex items-start gap-2">
+                <span className="text-lg">🚨</span>
+                <div className="flex-1">
+                  <div className="font-semibold mb-1">Error</div>
+                  <div>{error}</div>
+                </div>
+              </div>
             </div>
           )}
 
           {/* STEP 1: INPUT (Chat Interface) */}
           {step === "INPUT" && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 flex-1 flex flex-col">
-              <div className="mb-8 text-center sm:text-left">
-                 <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-white to-zinc-500 bg-clip-text text-transparent">Describe your vision.</h2>
+              <div className="mb-6 sm:mb-8 text-center sm:text-left">
+                 <h2 className="text-2xl sm:text-3xl font-bold mb-2 bg-gradient-to-r from-white to-zinc-500 bg-clip-text text-transparent">Describe your vision.</h2>
                  <p className="text-zinc-400 text-sm">
-                   I'll help you refine your idea, then negotiate the perfect tool stack for you.
+                   I&apos;ll help you refine your idea, then negotiate the perfect tool stack for you.
                  </p>
               </div>
               <div className="flex-1">
@@ -121,13 +127,18 @@ export default function Home() {
 
           {/* LOADING STATE (Selecting) */}
           {step === "SELECTING" && (
-            <div className="flex flex-col items-center justify-center py-20 animate-in fade-in zoom-in-95 duration-500 flex-1">
-              <div className="relative">
+            <div className="flex flex-col items-center justify-center py-16 sm:py-20 animate-in fade-in zoom-in-95 duration-500 flex-1">
+              <div className="relative mb-8">
                  <div className="absolute inset-0 bg-violet-500/20 blur-xl rounded-full animate-pulse" />
                  <Loader2 className="h-16 w-16 text-violet-500 animate-spin relative z-10" />
               </div>
-              <h3 className="text-2xl font-bold mt-8 text-white">Running Sniper Scope...</h3>
-              <p className="text-zinc-500 mt-2 font-mono text-sm">Filtering 68 tools • Calculating capability scores</p>
+              <h3 className="text-xl sm:text-2xl font-bold text-white text-center px-4">Running Sniper Scope...</h3>
+              <p className="text-zinc-500 mt-2 font-mono text-xs sm:text-sm text-center px-4">Filtering 68 tools • Calculating capability scores</p>
+              <div className="mt-6 flex gap-2">
+                <div className="h-2 w-2 bg-violet-500 rounded-full animate-bounce [animation-delay:0ms]" />
+                <div className="h-2 w-2 bg-violet-500 rounded-full animate-bounce [animation-delay:150ms]" />
+                <div className="h-2 w-2 bg-violet-500 rounded-full animate-bounce [animation-delay:300ms]" />
+              </div>
             </div>
           )}
 
@@ -140,13 +151,18 @@ export default function Home() {
 
           {/* LOADING STATE (Planning) */}
           {step === "PLANNING" && (
-            <div className="flex flex-col items-center justify-center py-20 animate-in fade-in zoom-in-95 duration-500 flex-1">
-              <div className="relative">
+            <div className="flex flex-col items-center justify-center py-16 sm:py-20 animate-in fade-in zoom-in-95 duration-500 flex-1">
+              <div className="relative mb-8">
                  <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full animate-pulse" />
                  <Loader2 className="h-16 w-16 text-emerald-500 animate-spin relative z-10" />
               </div>
-              <h3 className="text-2xl font-bold mt-8 text-white">Architecting Prompt Plan...</h3>
-              <p className="text-zinc-500 mt-2 font-mono text-sm">Traversing logic tree • Optimizing constraints</p>
+              <h3 className="text-xl sm:text-2xl font-bold text-white text-center px-4">Architecting Prompt Plan...</h3>
+              <p className="text-zinc-500 mt-2 font-mono text-xs sm:text-sm text-center px-4">Traversing logic tree • Optimizing constraints</p>
+              <div className="mt-6 flex gap-2">
+                <div className="h-2 w-2 bg-emerald-500 rounded-full animate-bounce [animation-delay:0ms]" />
+                <div className="h-2 w-2 bg-emerald-500 rounded-full animate-bounce [animation-delay:150ms]" />
+                <div className="h-2 w-2 bg-emerald-500 rounded-full animate-bounce [animation-delay:300ms]" />
+              </div>
             </div>
           )}
 

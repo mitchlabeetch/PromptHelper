@@ -4,7 +4,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import { Copy, CheckCircle2, Rocket, Terminal, Layers, Edit2, Save, Loader2, FileText } from "lucide-react";
+import { Copy, CheckCircle2, Rocket, Terminal, Layers, Edit2, Loader2, FileText } from "lucide-react";
 import { useState } from "react";
 import { generateMarkdown, downloadFile } from "@/lib/utils/export";
 
@@ -19,10 +19,14 @@ export function PlanDisplay() {
 
   if (!finalPlan) return null;
 
-  const copyToClipboard = (text: string, stepNum: number) => {
-    navigator.clipboard.writeText(text);
-    setCopiedStep(stepNum);
-    setTimeout(() => setCopiedStep(null), 2000);
+  const copyToClipboard = async (text: string, stepNum: number) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedStep(stepNum);
+      setTimeout(() => setCopiedStep(null), 2000);
+    } catch {
+      alert('Failed to copy to clipboard. Please try selecting and copying manually.');
+    }
   };
 
   const handleExport = () => {
@@ -50,7 +54,7 @@ export function PlanDisplay() {
       setRevisionInput("");
       setIsRevising(false);
       
-    } catch (err) {
+    } catch {
       alert("Failed to revise plan. Please try again.");
     } finally {
       setIsRevisingLoading(false);
@@ -85,7 +89,7 @@ export function PlanDisplay() {
                     <span className="font-bold text-white">{tool.tool_name}</span>
                     <Badge variant="secondary" className="text-[10px] bg-zinc-800 text-zinc-400">{tool.output_type}</Badge>
                  </div>
-                 <p className="text-xs text-zinc-500 line-clamp-2 italic">"{tool.use_case}"</p>
+                 <p className="text-xs text-zinc-500 line-clamp-2 italic">&quot;{tool.use_case}&quot;</p>
               </div>
            ))}
         </div>
@@ -97,17 +101,32 @@ export function PlanDisplay() {
            <h3 className="text-violet-300 font-bold mb-2 flex items-center gap-2">
              <Edit2 className="h-4 w-4" /> Adjust Plan
            </h3>
+           <p className="text-zinc-400 text-xs mb-3">Describe the changes you&apos;d like to make to your plan</p>
            <Textarea 
              value={revisionInput}
              onChange={(e) => setRevisionInput(e.target.value)}
-             placeholder="e.g., 'Make the prompts more formal' or 'Add a step for testing'"
-             className="bg-black/40 border-violet-500/20 mb-4"
+             placeholder="e.g., 'Make the prompts more formal and detailed' or 'Add a step for testing the output'"
+             className="bg-black/40 border-violet-500/20 mb-4 min-h-[100px]"
+             disabled={isRevisingLoading}
            />
            <div className="flex gap-3">
-             <Button size="sm" onClick={handleRevise} disabled={isRevisingLoading} className="bg-violet-600 hover:bg-violet-500">
-               {isRevisingLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply Changes"}
+             <Button 
+               size="sm" 
+               onClick={handleRevise} 
+               disabled={isRevisingLoading || !revisionInput.trim()} 
+               className="bg-violet-600 hover:bg-violet-500"
+             >
+               {isRevisingLoading ? (
+                 <>
+                   <Loader2 className="h-4 w-4 animate-spin mr-2" /> Applying...
+                 </>
+               ) : (
+                 "Apply Changes"
+               )}
              </Button>
-             <Button size="sm" variant="ghost" onClick={() => setIsRevising(false)}>Cancel</Button>
+             <Button size="sm" variant="ghost" onClick={() => setIsRevising(false)} disabled={isRevisingLoading}>
+               Cancel
+             </Button>
            </div>
         </div>
       )}
@@ -171,8 +190,8 @@ export function PlanDisplay() {
                       )}
                     </Button>
                   </div>
-                  <ScrollArea className="h-auto max-h-[400px] w-full rounded-xl border border-zinc-800 bg-black/40 shadow-inner">
-                    <pre className="p-6 text-sm font-mono text-zinc-300 leading-relaxed whitespace-pre-wrap selection:bg-violet-500/30">
+                  <ScrollArea className="h-auto max-h-[500px] w-full rounded-xl border border-zinc-800 bg-black/40 shadow-inner overflow-auto">
+                    <pre className="p-6 text-sm font-mono text-zinc-300 leading-relaxed whitespace-pre-wrap break-words selection:bg-violet-500/30 overflow-x-auto">
                       {step.prompt}
                     </pre>
                   </ScrollArea>
@@ -195,7 +214,7 @@ export function PlanDisplay() {
       {/* OTHER INFO */}
       {finalPlan.other_information && (
           <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-xl">
-              <h3 className="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-2">Architect's Notes</h3>
+              <h3 className="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-2">Architect&apos;s Notes</h3>
               <p className="text-sm text-zinc-300">{finalPlan.other_information}</p>
           </div>
       )}

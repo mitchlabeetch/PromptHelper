@@ -4,14 +4,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Capability, CapabilityEnum } from "@/types/selection";
-import { Badge } from "@/components/ui/badge";
 import { clsx } from "clsx";
-import { Sparkles, DollarSign, Code, FileText, Image, Video, Music, Box, Database } from "lucide-react";
+import { Sparkles, DollarSign, Code, FileText, Image as ImageIcon, Video, Music, Box, Database } from "lucide-react";
 
 const CAPABILITY_ICONS: Record<Capability, React.ReactNode> = {
   Text: <FileText className="h-4 w-4" />,
   Code: <Code className="h-4 w-4" />,
-  Image: <Image className="h-4 w-4" />,
+  Image: <ImageIcon className="h-4 w-4" />,
   Video: <Video className="h-4 w-4" />,
   Audio: <Music className="h-4 w-4" />,
   "3D": <Box className="h-4 w-4" />,
@@ -41,14 +40,18 @@ export function WizardInput() {
           value={userRequest}
           onChange={(e) => setUserRequest(e.target.value)}
         />
-        <p className="text-xs text-zinc-500 text-right">
-          {userRequest.length}/10 chars minimum
+        <p className={clsx(
+          "text-xs text-right transition-colors",
+          userRequest.length < 10 ? "text-red-400" : "text-emerald-500"
+        )}>
+          {userRequest.length}/10 chars minimum {userRequest.length >= 10 ? "✓" : ""}
         </p>
       </div>
 
       {/* 2. CAPABILITIES */}
       <div className="space-y-3">
         <Label className="text-zinc-300 font-semibold">What output do you need?</Label>
+        <p className="text-xs text-zinc-500">Select one or more output types for your project</p>
         <div className="flex flex-wrap gap-2">
           {Object.values(CapabilityEnum.enum).map((cap) => {
             const isActive = capabilities.includes(cap);
@@ -72,7 +75,9 @@ export function WizardInput() {
       </div>
 
       {/* 3. CONSTRAINTS */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-2">
+        <Label className="text-zinc-300 font-semibold">Preferences</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Free Only */}
         <div className="flex items-center justify-between p-4 rounded-lg border border-zinc-800 bg-zinc-950">
           <div className="flex items-center gap-3">
@@ -105,6 +110,7 @@ export function WizardInput() {
             checked={constraints.noCode} 
             onCheckedChange={() => toggleConstraint('noCode')} 
           />
+        </div>
         </div>
       </div>
 

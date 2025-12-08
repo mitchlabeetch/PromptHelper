@@ -1,14 +1,36 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Groq from "groq-sdk";
-import { SelectionRequestSchema, SelectionResponseSchema } from "@/types/selection";
+import { SelectionRequestSchema } from "@/types/selection";
 import { filterCandidates } from "@/lib/selection/hard-filter";
+import { checkRateLimit, getClientIdentifier } from "@/lib/rate-limit";
 
 // Re-export schema for internal use if needed
 const InputSchema = SelectionRequestSchema;
 
 export async function POST(req: Request) {
   try {
+    // Rate limiting: 10 requests per minute per IP
+    const clientId = getClientIdentifier(req);
+    const rateLimitResult = checkRateLimit(clientId, { maxRequests: 10, windowMs: 60000 });
+    
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { 
+          error: "Rate limit exceeded. Please wait before making more requests.",
+          retryAfter: Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)
+        },
+        { 
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': '10',
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            'X-RateLimit-Reset': rateLimitResult.resetTime.toString(),
+          }
+        }
+      );
+    }
+
     // A. Parse Body
     const body = await req.json();
     const parsedBody = InputSchema.parse(body);
@@ -76,22 +98,11 @@ export async function POST(req: Request) {
       - If no other tools are needed, return an empty array [].
     `;
 
-    // E. Execution (Gemini -> Fallback Groq)
+    // E. Execution (Groq Primary - 30 RPM free tier, Gemini as fallback)
     let rawJSON = "";
     
     try {
-      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
-      const model = genAI.getGenerativeModel({
-        model: "gemini-1.5-flash",
-        generationConfig: { responseMimeType: "application/json" }
-      });
-      
-      const result = await model.generateContent(systemPrompt);
-      rawJSON = result.response.text();
-      
-    } catch (geminiError) {
-      console.warn("⚠️ Gemini Selection Failed. Switching to Groq...", geminiError);
-      
+      // Primary: Groq (Llama 3.3 70B - 30 requests/minute free tier)
       const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || "" });
       const completion = await groq.chat.completions.create({
         messages: [{ role: "system", content: systemPrompt + "\n\nRETURN JSON ONLY." }],
@@ -100,6 +111,19 @@ export async function POST(req: Request) {
         response_format: { type: "json_object" }
       });
       rawJSON = completion.choices[0]?.message?.content || "{}";
+      
+    } catch (groqError) {
+      console.warn("⚠️ Groq Selection Failed. Switching to Gemini...", groqError);
+      
+      // Fallback: Google Gemini 1.5 Flash
+      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
+      const model = genAI.getGenerativeModel({
+        model: "gemini-1.5-flash",
+        generationConfig: { responseMimeType: "application/json" }
+      });
+      
+      const result = await model.generateContent(systemPrompt);
+      rawJSON = result.response.text();
     }
 
     // F. Validation & Hydration

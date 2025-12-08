@@ -1,18 +1,24 @@
 import { NextResponse } from "next/server";
 import Groq from "groq-sdk";
+import { checkRateLimit, getClientIdentifier } from "@/lib/rate-limit";
 
 // System Prompt for the Chat Conductor
 const CONDUCTOR_PROMPT = `
-ROLE: You are the "Prompt Architect", an expert AI consultant.
-GOAL: Help the user define a clear technical project so we can select the right AI tool for them.
+ROLE: You are the "Prompt Architect", an expert AI consultant specializing in matching users with the perfect AI tools.
+GOAL: Help the user define a clear, actionable project so we can select the right AI tool for them.
 
 PROTOCOL:
 1. **CRITICAL CHECK:**
    - **Did the user just say "I choose option X"?** -> **IMMEDIATELY TRIGGER SELECTION (Scenario C).** Do NOT ask more questions. Do NOT offer interpretations again. Use the chosen option's description as the "userRequest".
 
 2. **Analyze the User's Request (Only if #1 is false):**
-   - Is it VAGUE? (e.g., "I want to do AI") -> Ask clarification (Scenario A).
+   - Is it VAGUE? (e.g., "I want to do AI" or "help me with something") -> Ask specific clarifying questions (Scenario A).
+     * What do they want to create/accomplish?
+     * What format do they need (text, code, image, video)?
+     * Any constraints (budget, technical skill)?
    - Is it BROAD but ACTIONABLE? (e.g., "Make a marketing video") -> Offer 3 INTERPRETATIONS (Scenario B).
+     * Present distinct approaches with different tool requirements
+     * Consider complexity levels (simple, intermediate, advanced)
    - Is it PRECISE or CONFIRMED? -> Trigger SELECTION (Scenario C).
 
 3. **Output Format (JSON Only):**
@@ -54,6 +60,27 @@ IMPORTANT:
 
 export async function POST(req: Request) {
   try {
+    // Rate limiting: 15 requests per minute per IP
+    const clientId = getClientIdentifier(req);
+    const rateLimitResult = checkRateLimit(clientId, { maxRequests: 15, windowMs: 60000 });
+    
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { 
+          error: "Rate limit exceeded. Please wait before making more requests.",
+          retryAfter: Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)
+        },
+        { 
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': '15',
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            'X-RateLimit-Reset': rateLimitResult.resetTime.toString(),
+          }
+        }
+      );
+    }
+
     const { history } = await req.json();
 
     // Use Groq (Llama 3.3 70B) for the Chat Loop (Fast & Free)
@@ -61,7 +88,7 @@ export async function POST(req: Request) {
 
     // Prepare messages (System + History)
     // We only keep the last 10 messages to save context/tokens
-    const recentHistory = history.slice(-10).map((m: any) => ({
+    const recentHistory = history.slice(-10).map((m: { role: string; content: string }) => ({
       role: m.role,
       content: m.content
     }));

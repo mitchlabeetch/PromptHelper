@@ -21,7 +21,7 @@ export function TechSpecs() {
              </div>
              <h3 className="text-white font-bold">Logic Tree</h3>
              <p className="text-zinc-400 text-sm leading-relaxed">
-                Deterministically maps user intent to specific prompting strategies (e.g., "If Coding &rarr; Use Chain of Thought", "If Creative &rarr; High Temperature").
+                Deterministically maps user intent to specific prompting strategies (e.g., &quot;If Coding → Use Chain of Thought&quot;, &quot;If Creative → High Temperature&quot;).
              </p>
           </div>
 
@@ -31,7 +31,7 @@ export function TechSpecs() {
              </div>
              <h3 className="text-white font-bold">The Brain</h3>
              <p className="text-zinc-400 text-sm leading-relaxed">
-                Powered by <strong>Google Gemini 1.5 Flash</strong> for reasoning and <strong>Meta Llama 3.3 70B</strong> (via Groq) for speed. Zero latency. Zero cost.
+                Powered by <strong>Meta Llama 3.3 70B</strong> (via Groq) with 30 RPM free tier. Fallback to <strong>Google Gemini 1.5 Flash</strong> for reliability. Rate-limited for fair use.
              </p>
           </div>
 
