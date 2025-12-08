@@ -31,12 +31,12 @@ export function LandingHero({ onStart }: LandingHeroProps) {
             <span className="text-white">Build what you </span>
             <span className="text-gradient-primary">imagine.</span>
             <br />
-            <span className="text-white/40 text-3xl sm:text-4xl md:text-5xl">We handle the how.</span>
+            <span className="text-white/40 text-3xl sm:text-4xl md:text-5xl">We architect the how.</span>
           </h1>
 
           {/* SUBHEADLINE */}
           <p className="text-base text-zinc-400 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 leading-relaxed max-w-xl mx-auto lg:mx-0">
-            Stop wrestling with generic chatbots. <strong>Cure your creative block.</strong> We analyze your vague ideas, select the perfect specialized AI model, and engineer a battle-ready launch plan.
+            Stop wrestling with generic chatbots. <strong>Conquer your creative block.</strong> We analyze your ideas, select the perfect AI tool, and engineer a battle-ready launch plan.
           </p>
 
           {/* CTA BUTTONS */}

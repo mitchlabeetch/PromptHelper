@@ -135,7 +135,7 @@ export function ChatInterface() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Describe your project (e.g., 'I want to create a marketing video from text')..."
+            placeholder="Tell me what you want to create (e.g., 'I want to build a marketing video for my startup')..."
             className="min-h-[60px] max-h-[200px] bg-black/40 border-white/10 focus:border-violet-500/50 resize-none py-4 rounded-xl pr-12 text-zinc-200 placeholder:text-zinc-600"
           />
           <Button 
@@ -149,7 +149,7 @@ export function ChatInterface() {
         </div>
         <div className="text-center mt-2">
              <p className="text-[10px] text-zinc-600 font-mono">
-               Powered by Groq (Llama 3.3) & Google Gemini 1.5 Flash • Free Tier Architecture
+               Powered by OpenRouter • Free Tier Architecture
              </p>
         </div>
       </div>

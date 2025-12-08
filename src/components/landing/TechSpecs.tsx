@@ -30,9 +30,9 @@ export function TechSpecs() {
                 <Cpu className="h-6 w-6" />
              </div>
              <h3 className="text-white font-bold">The Brain</h3>
-             <p className="text-zinc-400 text-sm leading-relaxed">
-                Powered by <strong>Google Gemini 1.5 Flash</strong> for reasoning and <strong>Meta Llama 3.3 70B</strong> (via Groq) for speed. Zero latency. Zero cost.
-             </p>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Powered by <strong>OpenRouter</strong> with access to top free models including <strong>DeepSeek R1</strong> and <strong>Llama 3.3</strong>. Zero latency. Zero cost.
+              </p>
           </div>
 
        </div>

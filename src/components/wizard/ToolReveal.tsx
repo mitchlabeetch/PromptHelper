@@ -13,7 +13,7 @@ export function ToolReveal() {
     <div className="space-y-6">
       
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-zinc-100">Recommended Architect</h2>
+         <h2 className="text-2xl font-bold text-zinc-100">Your Best Match</h2>
         <Button variant="ghost" size="sm" onClick={reset} className="text-zinc-400 hover:text-zinc-100">
           <RefreshCw className="mr-2 h-4 w-4" />
           Start Over
@@ -40,7 +40,7 @@ export function ToolReveal() {
               </CardTitle>
             </div>
             <div className="text-right hidden sm:block">
-              <div className="text-3xl font-black text-zinc-800">{selectedTool.specs.reasoning_level}<span className="text-sm text-zinc-600 font-medium">/10</span></div>
+              <div className="text-3xl font-black text-emerald-400">{selectedTool.specs.reasoning_level}<span className="text-sm text-zinc-400 font-medium">/10</span></div>
               <div className="text-xs text-zinc-500 uppercase font-bold">Reasoning</div>
             </div>
           </div>

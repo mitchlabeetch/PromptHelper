@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import Groq from "groq-sdk";
+import { callOpenRouter, parseJSONResponse } from "@/lib/api/openrouter";
 
 // System Prompt for the Chat Conductor
 const CONDUCTOR_PROMPT = `
@@ -31,7 +31,7 @@ PROTOCOL:
      "options": [
        { "id": "1", "label": "Full Automation", "description": "I want an AI to generate the video from zero." },
        { "id": "2", "label": "Assistant Mode", "description": "I want to edit the video myself but need AI assets." },
-       { "id": "3", "label": "Strategic Plan", "description": "I just want a script and marketing strategy." }
+       { "id": "3", "label": "Strategic Plan", "description": "I just need a script and marketing strategy." }
      ]
    }
 
@@ -39,7 +39,7 @@ PROTOCOL:
    Use this when the user selects an option OR the request is already crystal clear.
    {
      "type": "TRIGGER_SELECTION",
-     "content": "Understood. Searching for the perfect tool for that specific workflow...",
+     "content": "Got it! Searching for the perfect tool for your workflow...",
      "payload": {
        "userRequest": "The refined, specific user request (including the chosen option details)...",
        "constraints": { "freeOnly": true, "noCode": false },
@@ -50,57 +50,71 @@ PROTOCOL:
 IMPORTANT:
 - "required_capabilities" must be from: ["Text", "Code", "Image", "Video", "Audio", "3D", "Data"].
 - Default "freeOnly" to true unless user specifies otherwise.
+- Be friendly and conversational, not robotic.
 `;
 
 export async function POST(req: Request) {
   try {
     const { history } = await req.json();
 
-    // Use Groq (Llama 3.3 70B) for the Chat Loop (Fast & Free)
-    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || "" });
-
     // Prepare messages (System + History)
-    // We only keep the last 10 messages to save context/tokens
-    const recentHistory = history.slice(-10).map((m: any) => ({
-      role: m.role,
+    // Keep last 10 messages to save context/tokens
+    const recentHistory = history.slice(-10).map((m: { role: string; content: string }) => ({
+      role: m.role as "user" | "assistant",
       content: m.content
     }));
 
-    const completion = await groq.chat.completions.create({
+    const { content: rawResponse } = await callOpenRouter("chat", {
       messages: [
         { role: "system", content: CONDUCTOR_PROMPT },
         ...recentHistory
       ],
-      model: "llama-3.3-70b-versatile",
-      temperature: 0.3, // Lower temp to reduce hallucination/looping
-      response_format: { type: "json_object" }
+      temperature: 0.3,
+      jsonMode: true
     });
 
-    const rawResponse = completion.choices[0]?.message?.content || "{}";
-    const response = JSON.parse(rawResponse);
+    const response = parseJSONResponse(rawResponse) as {
+      type: string;
+      content: string;
+      options?: Array<{ id: string; label: string; description: string }>;
+      payload?: {
+        userRequest: string;
+        constraints: { freeOnly: boolean; noCode: boolean };
+        required_capabilities: string[];
+      };
+    };
 
     // Handle Artifacts
     let artifact = null;
 
     if (response.type === "TRIGGER_SELECTION") {
-        artifact = {
-            type: "TOOL_SELECTION",
-            data: response.payload
-        };
+      artifact = {
+        type: "TOOL_SELECTION",
+        data: response.payload
+      };
     } else if (response.type === "INTERPRETATIONS") {
-        artifact = {
-            type: "INTERPRETATION_OPTIONS",
-            data: response.options
-        };
+      artifact = {
+        type: "INTERPRETATION_OPTIONS",
+        data: response.options
+      };
     }
 
     return NextResponse.json({
-        content: response.content,
-        artifact: artifact
+      content: response.content,
+      artifact: artifact
     });
 
   } catch (error) {
     console.error("Chat API Error:", error);
-    return NextResponse.json({ error: "Failed to process chat" }, { status: 500 });
+    
+    // Provide helpful error message
+    const message = error instanceof Error ? error.message : "Unknown error";
+    const isApiKeyIssue = message.includes("OPENROUTER_API_KEY");
+    
+    return NextResponse.json({ 
+      error: isApiKeyIssue 
+        ? "API configuration issue. Please check your settings."
+        : "I'm having trouble connecting right now. Please try again in a moment."
+    }, { status: 500 });
   }
 }

@@ -6,21 +6,21 @@ export function ProcessTimeline() {
       icon: MessageSquare,
       title: "Negotiation Protocol",
       subtitle: "Phase 1",
-      desc: "The Conductor Agent intercepts your request. It loops through a constraint-extraction algorithm to identify your implicit needs (Budget, Code-Level, Modality) before a single tool is chosen.",
+      desc: "Our AI listens to your idea and asks smart questions to understand your needs—budget, skill level, and what you want to create.",
       color: "from-blue-400 to-indigo-400"
     },
     {
       icon: Target,
       title: "Sniper Scope Selection",
       subtitle: "Phase 2",
-      desc: "Our logic engine queries a proprietary JSON database of 68 SOTA models. It calculates a 'Fit Score' based on Reasoning, Context Window, and Vision capabilities to deterministically select the single best engine.",
+      desc: "We search our curated catalog of 68 top AI tools and calculate a 'Fit Score' based on reasoning power, speed, and your specific requirements to find the single best match.",
       color: "from-violet-400 to-fuchsia-400"
     },
     {
       icon: Rocket,
       title: "Launch Pad Architecture",
       subtitle: "Phase 3",
-      desc: "The Architect Agent generates a JSON-structured Blueprint. It traverses a 'Best Practices' tree to engineer specific, optimized prompts that you simply copy-paste to launch your mission.",
+      desc: "We generate a structured blueprint with optimized, copy-paste prompts designed for your chosen tool. Just follow the steps and launch your project.",
       color: "from-emerald-400 to-teal-400"
     }
   ];

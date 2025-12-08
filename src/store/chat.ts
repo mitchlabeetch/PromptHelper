@@ -7,7 +7,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     {
       id: 'init-1',
       role: 'assistant',
-      content: "Hello. I am your Prompt Architect. Tell me what you want to build, and I'll find the right tools and strategy for you.",
+      content: "Hey! I'm your Prompt Architect. Tell me what you want to build, and I'll find the perfect AI tools and strategy for you. \ud83d\ude80",
       timestamp: 0 // Static to prevent hydration mismatch
     }
   ],
@@ -22,7 +22,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     messages: [{
       id: 'init-1',
       role: 'assistant',
-      content: "Hello. I am your Prompt Architect. Tell me what you want to build, and I'll find the right tools and strategy for you.",
+      content: "Hey! I'm your Prompt Architect. Tell me what you want to build, and I'll find the perfect AI tools and strategy for you. \ud83d\ude80",
       timestamp: 0
     }],
     isLoading: false

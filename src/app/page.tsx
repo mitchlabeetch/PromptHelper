@@ -88,7 +88,7 @@ export default function Home() {
           </div>
 
           <footer className="py-8 border-t border-white/5 text-center text-zinc-600 text-sm bg-black/40">
-             <p>Powered by Google Gemini 1.5 Flash & Meta Llama 3.3 70B • Open Source</p>
+             <p>Powered by OpenRouter • DeepSeek R1 & Llama 3.3 • Open Source</p>
           </footer>
         </div>
       )}
