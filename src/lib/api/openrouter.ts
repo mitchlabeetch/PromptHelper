@@ -7,18 +7,18 @@
 export const MODELS = {
   // For chat/conversation - fast, free
   chat: {
-    primary: "deepseek/deepseek-r1-0528:free",
-    fallback: "meta-llama/llama-3.3-70b-instruct:free"
+    primary: "meta-llama/llama-3.3-70b-instruct:free",
+    fallback: "deepseek/deepseek-r1:free"
   },
   // For selection/reasoning - smarter
   selection: {
     primary: "meta-llama/llama-3.3-70b-instruct:free",
-    fallback: "deepseek/deepseek-r1-0528:free"
+    fallback: "deepseek/deepseek-r1:free"
   },
   // For plan generation - creative + structured
   planning: {
     primary: "meta-llama/llama-3.3-70b-instruct:free",
-    fallback: "deepseek/deepseek-r1-0528:free"
+    fallback: "deepseek/deepseek-r1:free"
   }
 } as const;
 

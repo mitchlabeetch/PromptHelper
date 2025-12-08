@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Prompt Architect (WhiteInputSyndrome)
 
-## Getting Started
+**Your AI-Powered Prompt Engineering Companion**
 
-First, run the development server:
+Stop wrestling with generic chatbots. Prompt Architect analyzes your project ideas, selects the perfect AI tool from 68+ curated models, and generates battle-ready prompts tailored to your specific needs.
+
+---
+
+## ✨ Features
+
+- **Smart Tool Selection** — We analyze your idea and match it with the best AI tool from our curated database
+- **Copy-Paste Launch Plans** — Get detailed, step-by-step prompts optimized for your chosen tool
+- **100% Free** — Powered by OpenRouter's free tier models (Llama 3.3, DeepSeek R1)
+- **68+ AI Tools** — Covers text, code, image, video, audio, 3D, and data tasks
+
+---
+
+## 🛠️ Quick Start
+
+### 1. Clone & Install
+
+```bash
+git clone https://github.com/lightmyfireadmin/PromptHelper.git
+cd my-prompt-architect
+npm install
+```
+
+### 2. Configure API Key
+
+Create a `.env.local` file:
+
+```bash
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+```
+
+Get a free API key at [openrouter.ai/keys](https://openrouter.ai/keys)
+
+### 3. Run
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to start architecting!
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🏗️ How It Works
 
-## Learn More
+1. **Describe Your Vision** — Tell us what you want to create
+2. **Smart Questions** — Our AI clarifies your needs and constraints
+3. **Tool Selection** — We pick the perfect AI tool for your project
+4. **Launch Plan** — Get optimized, copy-paste prompts for each step
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧰 Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Framework:** Next.js 15 (App Router)
+- **Styling:** Tailwind CSS v4 + Shadcn/UI
+- **State:** Zustand
+- **AI:** OpenRouter (Llama 3.3 70B Instruct, DeepSeek R1)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📁 Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+├── app/
+│   ├── api/architect/     # API routes (chat, select, plan)
+│   └── page.tsx           # Main wizard UI
+├── components/
+│   ├── landing/           # Landing page sections
+│   ├── wizard/            # Tool reveal & plan display
+│   └── chat/              # Chat interface
+├── data/
+│   ├── tools_database.json    # 68 AI tools catalog
+│   └── best_practices.json    # Prompting strategies
+└── lib/
+    └── api/openrouter.ts      # API client
+```
+
+---
+
+## 📄 License
+
+MIT — Free to use, modify, and distribute.
+
+---
+
+Built with ❤️ for the AI builder community.
