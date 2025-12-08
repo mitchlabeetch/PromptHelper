@@ -165,7 +165,7 @@ export function ChatInterface() {
         </div>
         <div className="text-center mt-2">
              <p className="text-[10px] text-zinc-600 font-mono">
-               Powered by Groq (Llama 3.3) & Google Gemini 1.5 Flash • Free Tier Architecture
+               Powered by Groq (Llama 3.3 70B) • 30 RPM Free Tier • Rate-Limited for Fair Use
              </p>
         </div>
       </div>

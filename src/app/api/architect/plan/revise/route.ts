@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import Groq from "groq-sdk";
 import { LaunchPlan } from "@/types";
+import { checkRateLimit, getClientIdentifier } from "@/lib/rate-limit";
 
 // Input: The User Request + Current Plan + Revision Instruction
 const ReviseRequestSchema = z.object({
@@ -12,6 +13,27 @@ const ReviseRequestSchema = z.object({
 
 export async function POST(req: Request) {
   try {
+    // Rate limiting: 5 requests per minute per IP (revisions are resource-intensive)
+    const clientId = getClientIdentifier(req);
+    const rateLimitResult = checkRateLimit(clientId, { maxRequests: 5, windowMs: 60000 });
+    
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { 
+          error: "Rate limit exceeded. Please wait before making more requests.",
+          retryAfter: Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)
+        },
+        { 
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': '5',
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            'X-RateLimit-Reset': rateLimitResult.resetTime.toString(),
+          }
+        }
+      );
+    }
+
     const body = await req.json();
     const { currentPlan, userInstruction } = ReviseRequestSchema.parse(body);
 
@@ -36,8 +58,19 @@ export async function POST(req: Request) {
 
     let rawJSON = "";
 
-    // A. Attempt 1: Gemini 1.5 Flash
+    // A. Attempt 1: Groq (Primary - better free tier limits)
     try {
+      const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || "" });
+      const completion = await groq.chat.completions.create({
+        messages: [{ role: "system", content: systemPrompt + "\n\nRETURN JSON ONLY." }],
+        model: "llama-3.3-70b-versatile",
+        temperature: 0.2,
+        response_format: { type: "json_object" }
+      });
+      rawJSON = completion.choices[0]?.message?.content || "{}";
+
+    } catch {
+      // B. Fallback: Gemini 1.5 Flash
       const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
       const model = genAI.getGenerativeModel({
         model: "gemini-1.5-flash",
@@ -49,17 +82,6 @@ export async function POST(req: Request) {
       });
 
       rawJSON = result.response.text();
-
-    } catch {
-      // B. Fallback: Groq
-      const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || "" });
-      const completion = await groq.chat.completions.create({
-        messages: [{ role: "system", content: systemPrompt + "\n\nRETURN JSON ONLY." }],
-        model: "llama-3.3-70b-versatile",
-        temperature: 0.2,
-        response_format: { type: "json_object" }
-      });
-      rawJSON = completion.choices[0]?.message?.content || "{}";
     }
 
     const json = JSON.parse(rawJSON);

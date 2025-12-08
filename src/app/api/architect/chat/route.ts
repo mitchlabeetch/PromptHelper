@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Groq from "groq-sdk";
+import { checkRateLimit, getClientIdentifier } from "@/lib/rate-limit";
 
 // System Prompt for the Chat Conductor
 const CONDUCTOR_PROMPT = `
@@ -59,6 +60,27 @@ IMPORTANT:
 
 export async function POST(req: Request) {
   try {
+    // Rate limiting: 15 requests per minute per IP
+    const clientId = getClientIdentifier(req);
+    const rateLimitResult = checkRateLimit(clientId, { maxRequests: 15, windowMs: 60000 });
+    
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { 
+          error: "Rate limit exceeded. Please wait before making more requests.",
+          retryAfter: Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)
+        },
+        { 
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': '15',
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            'X-RateLimit-Reset': rateLimitResult.resetTime.toString(),
+          }
+        }
+      );
+    }
+
     const { history } = await req.json();
 
     // Use Groq (Llama 3.3 70B) for the Chat Loop (Fast & Free)
