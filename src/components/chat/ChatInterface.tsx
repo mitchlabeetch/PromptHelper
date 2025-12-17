@@ -2,9 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useChatStore } from "@/store/chat";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Bot, User, Loader2, RefreshCw, Terminal } from "lucide-react";
-import { clsx } from "clsx";
-import { ToolRevealArtifact } from "./ToolRevealArtifact";
+import { Send, Bot, Loader2, RefreshCw, Terminal } from "lucide-react";
+import { MessageItem } from "./MessageItem";
 
 export function ChatInterface() {
   const { messages, sendMessage, isLoading, resetChat } = useChatStore();
@@ -52,65 +51,11 @@ export function ChatInterface() {
       {/* CHAT AREA */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6 scroll-smooth custom-scrollbar">
         {messages.map((msg) => (
-          <div
+          <MessageItem
             key={msg.id}
-            className={clsx(
-              "flex gap-4 max-w-[90%]",
-              msg.role === "user" ? "ml-auto flex-row-reverse" : "mr-auto animate-in fade-in slide-in-from-left-2 duration-300"
-            )}
-          >
-            {/* AVATAR */}
-            <div className={clsx(
-              "h-8 w-8 rounded-full flex items-center justify-center shrink-0 border",
-              msg.role === "assistant" ? "bg-violet-500/10 text-violet-400 border-violet-500/20" : "bg-zinc-800/50 text-zinc-400 border-zinc-700/50"
-            )}>
-              {msg.role === "assistant" ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
-            </div>
-
-            {/* CONTENT */}
-            <div className="space-y-2 max-w-full">
-              <div className={clsx(
-                "p-4 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap shadow-sm",
-                msg.role === "user" 
-                  ? "bg-violet-600/10 border border-violet-500/20 text-violet-100 rounded-tr-none backdrop-blur-sm" 
-                  : "bg-white/5 border border-white/10 text-zinc-300 rounded-tl-none backdrop-blur-sm"
-              )}>
-                {msg.content}
-              </div>
-
-              {/* ARTIFACT RENDERER */}
-              {msg.artifact && msg.artifact.type === "TOOL_SELECTION" && (
-                <div className="mt-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <ToolRevealArtifact selectionData={msg.artifact.data} />
-                </div>
-              )}
-
-              {/* INTERPRETATION OPTIONS RENDERER */}
-              {msg.artifact && msg.artifact.type === "INTERPRETATION_OPTIONS" && (
-                <div className="mt-4 grid gap-3 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                   {msg.artifact.data.map((option: any) => (
-                      <button
-                        key={option.id}
-                        onClick={() => sendMessage(`I choose option ${option.id}: ${option.label}. ${option.description}`)}
-                        className="text-left p-4 glass-button rounded-xl group transition-all hover:border-violet-500/30"
-                      >
-                        <div className="font-medium text-violet-300 group-hover:text-violet-200 mb-1 flex items-center gap-2">
-                           <span className="bg-violet-500/10 w-6 h-6 flex items-center justify-center rounded-full text-xs border border-violet-500/20 font-mono">{option.id}</span>
-                           {option.label}
-                        </div>
-                        <div className="text-zinc-400 text-xs ml-8 group-hover:text-zinc-300">{option.description}</div>
-                      </button>
-                   ))}
-                   <button 
-                      onClick={() => sendMessage("None of these really fit what I have in mind. I'll explain more.")}
-                      className="text-center p-3 text-xs text-zinc-500 hover:text-zinc-300 hover:bg-white/5 rounded-lg transition-colors"
-                   >
-                      None of these fit perfectly
-                   </button>
-                </div>
-              )}
-            </div>
-          </div>
+            message={msg}
+            onSendMessage={sendMessage}
+          />
         ))}
 
         {isLoading && (
