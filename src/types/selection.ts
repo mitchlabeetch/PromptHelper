@@ -4,12 +4,12 @@ export const CapabilityEnum = z.enum(["Text", "Code", "Image", "Video", "Audio",
 export type Capability = z.infer<typeof CapabilityEnum>;
 
 export const SelectionRequestSchema = z.object({
-  userRequest: z.string().min(5),
+  userRequest: z.string().min(5).max(5000), // Limit input length to prevent DoS
   constraints: z.object({
     freeOnly: z.boolean().default(true),
     noCode: z.boolean().default(false),
   }),
-  required_capabilities: z.array(CapabilityEnum).min(1),
+  required_capabilities: z.array(CapabilityEnum).min(1).max(20), // Limit array size
 });
 
 export type SelectionRequest = z.infer<typeof SelectionRequestSchema>;
