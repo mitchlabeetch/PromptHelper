@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { ChatState, ChatMessage } from '@/types/chat';
-import { v4 as uuidv4 } from 'uuid';
+
+const generateId = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
 export const useChatStore = create<ChatState>((set, get) => ({
   messages: [
@@ -15,7 +16,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   streamingContent: "",
 
   addMessage: (msg) => set((state) => ({
-    messages: [...state.messages, { ...msg, id: uuidv4(), timestamp: Date.now() }]
+    messages: [...state.messages, { ...msg, id: generateId(), timestamp: Date.now() }]
   })),
 
   resetChat: () => set({
