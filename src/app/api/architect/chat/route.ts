@@ -1,5 +1,14 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { callOpenRouter, parseJSONResponse } from "@/lib/api/openrouter";
+
+// Schema for input validation
+const ChatRequestSchema = z.object({
+  history: z.array(z.object({
+    role: z.string(),
+    content: z.string()
+  }))
+});
 
 // System Prompt for the Chat Conductor
 const CONDUCTOR_PROMPT = `
@@ -55,7 +64,18 @@ IMPORTANT:
 
 export async function POST(req: Request) {
   try {
-    const { history } = await req.json();
+    const body = await req.json();
+
+    // Validate request body
+    const validation = ChatRequestSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: "Invalid request format", details: validation.error.issues },
+        { status: 400 }
+      );
+    }
+
+    const { history } = validation.data;
 
     // Prepare messages (System + History)
     // Keep last 10 messages to save context/tokens
