@@ -139,9 +139,13 @@ export function LandingHero({ onStart }: LandingHeroProps) {
       </div>
 
       {/* SCROLL CUE */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer z-10" onClick={() => document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' })}>
+      <button
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer z-10 bg-transparent border-none p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 rounded-full"
+        onClick={() => document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' })}
+        aria-label="Scroll to timeline"
+      >
          <ChevronDown className="h-6 w-6 text-zinc-600 hover:text-white transition-colors" />
-      </div>
+      </button>
 
     </section>
   );
