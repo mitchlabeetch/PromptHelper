@@ -1,14 +1,13 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useChatStore } from "@/store/chat";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Bot, Loader2, RefreshCw, Terminal } from "lucide-react";
-import { MessageItem } from "./MessageItem";
+import { Send, RefreshCw, Terminal } from "lucide-react";
+import { MessageList } from "./MessageList";
 
 export function ChatInterface() {
   const { messages, sendMessage, isLoading, resetChat } = useChatStore();
   const [input, setInput] = useState("");
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -23,10 +22,6 @@ export function ChatInterface() {
       handleSend();
     }
   };
-
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isLoading]);
 
   return (
     <div className="flex flex-col min-h-[50vh] max-h-[85vh] h-auto w-full max-w-4xl mx-auto glass-panel rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 ease-in-out animate-in fade-in slide-in-from-bottom-4">
@@ -50,29 +45,11 @@ export function ChatInterface() {
       </div>
 
       {/* CHAT AREA */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-6 scroll-smooth custom-scrollbar">
-        {messages.map((msg) => (
-          <MessageItem
-            key={msg.id}
-            message={msg}
-            onSendMessage={sendMessage}
-          />
-        ))}
-
-        {isLoading && (
-          <div className="flex gap-4 max-w-[90%] mr-auto animate-in fade-in slide-in-from-left-2">
-            <div className="h-8 w-8 rounded-full bg-violet-500/10 text-violet-400 flex items-center justify-center animate-pulse border border-violet-500/20">
-              <Bot className="h-4 w-4" />
-            </div>
-            <div className="bg-white/5 border border-white/10 p-4 rounded-2xl rounded-tl-none flex items-center gap-2 text-zinc-500 text-sm backdrop-blur-sm">
-              <Loader2 className="h-3 w-3 animate-spin" />
-              Thinking...
-            </div>
-          </div>
-        )}
-        
-        <div ref={scrollRef} />
-      </div>
+      <MessageList
+        messages={messages}
+        isLoading={isLoading}
+        onSendMessage={sendMessage}
+      />
 
       {/* INPUT AREA */}
       <div className="p-4 bg-black/20 border-t border-white/5 backdrop-blur-md">
