@@ -37,14 +37,14 @@ export default function Home() {
       <header className="fixed top-0 left-0 right-0 border-b border-white/5 p-4 bg-black/50 backdrop-blur-xl z-50 transition-all duration-300">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <button
-            className="flex items-center gap-3 cursor-pointer group focus:outline-none focus:ring-2 focus:ring-violet-500 rounded-lg p-1"
+            className="flex items-center gap-3 cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 rounded-lg p-1 bg-transparent border-none"
             onClick={handleBackToLanding}
             aria-label="Back to landing page"
           >
             <div className="relative h-8 w-8 group-hover:scale-110 transition-transform duration-300">
-               <Image src="/logo.svg" alt="WhiteInputSyndrome Logo" fill className="object-contain" />
+               <Image src="/logo.svg" alt="" fill className="object-contain" />
             </div>
-            <h1 className="text-lg font-bold tracking-tight text-white font-mono">WHITE<span className="text-violet-400">INPUT</span>SYNDROME</h1>
+            <span className="text-lg font-bold tracking-tight text-white font-mono">WHITE<span className="text-violet-400">INPUT</span>SYNDROME</span>
           </button>
           
           <div className="flex items-center gap-4">

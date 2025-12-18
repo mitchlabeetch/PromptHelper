@@ -5,9 +5,9 @@ import { callOpenRouter, parseJSONResponse } from "@/lib/api/openrouter";
 // Schema for input validation
 const ChatRequestSchema = z.object({
   history: z.array(z.object({
-    role: z.string(),
-    content: z.string()
-  }))
+    role: z.enum(["user", "assistant"]),
+    content: z.string().max(20000) // Limit content length to prevent DoS
+  })).max(50) // Limit history length to prevent DoS
 });
 
 // System Prompt for the Chat Conductor
