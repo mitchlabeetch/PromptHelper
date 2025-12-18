@@ -162,6 +162,22 @@ export const useWizardStore = create<WizardState>((set, get) => ({
         isLoading: false 
       });
 
+      // Save to local history
+      try {
+        const historyItem = {
+           id: crypto.randomUUID(),
+           timestamp: Date.now(),
+           plan: data,
+           userRequest
+        };
+        const existing = localStorage.getItem('prompthelper_history');
+        const history = existing ? JSON.parse(existing) : [];
+        const updated = [historyItem, ...history].slice(0, 10);
+        localStorage.setItem('prompthelper_history', JSON.stringify(updated));
+      } catch (e) {
+        console.error("Failed to save history", e);
+      }
+
     } catch (err) {
       set({ 
         error: err instanceof Error ? err.message : "Failed to generate plan", 

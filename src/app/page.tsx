@@ -14,10 +14,11 @@ import { PlanPreview } from "@/components/landing/PlanPreview";
 import { TechSpecs } from "@/components/landing/TechSpecs";
 import { Loader2, ArrowLeft, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import Image from "next/image";
 
 export default function Home() {
-  const { step, isLoading, error, setStep } = useWizardStore();
+  const { step, error } = useWizardStore();
   const [hasStarted, setHasStarted] = useState(false);
 
   const handleStart = () => {
@@ -35,16 +36,21 @@ export default function Home() {
       {/* HEADER */}
       <header className="fixed top-0 left-0 right-0 border-b border-white/5 p-4 bg-black/50 backdrop-blur-xl z-50 transition-all duration-300">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer group" onClick={handleBackToLanding}>
+          <button
+            className="flex items-center gap-3 cursor-pointer group focus:outline-none focus:ring-2 focus:ring-violet-500 rounded-lg p-1"
+            onClick={handleBackToLanding}
+            aria-label="Back to landing page"
+          >
             <div className="relative h-8 w-8 group-hover:scale-110 transition-transform duration-300">
                <Image src="/logo.svg" alt="WhiteInputSyndrome Logo" fill className="object-contain" />
             </div>
             <h1 className="text-lg font-bold tracking-tight text-white font-mono">WHITE<span className="text-violet-400">INPUT</span>SYNDROME</h1>
-          </div>
+          </button>
           
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             {hasStarted && step === 'INPUT' && (
-              <Button variant="ghost" size="sm" onClick={handleBackToLanding} className="text-zinc-500 hover:text-white">
+              <Button variant="ghost" size="sm" onClick={handleBackToLanding} className="text-zinc-500 hover:text-white" aria-label="Back to landing page">
                  <ArrowLeft className="h-4 w-4 mr-2" /> Back
               </Button>
             )}
@@ -95,7 +101,7 @@ export default function Home() {
 
       {/* APP FLOW STATE */}
       {hasStarted && (
-        <div className="max-w-4xl mx-auto px-4 py-24 h-full min-h-screen flex flex-col">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 h-full min-h-screen flex flex-col">
           
           {/* GLOBAL ERROR STATE */}
           {error && (
@@ -110,7 +116,7 @@ export default function Home() {
               <div className="mb-8 text-center sm:text-left">
                  <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-white to-zinc-500 bg-clip-text text-transparent">Describe your vision.</h2>
                  <p className="text-zinc-400 text-sm">
-                   I'll help you refine your idea, then negotiate the perfect tool stack for you.
+                   I&apos;ll help you refine your idea, then negotiate the perfect tool stack for you.
                  </p>
               </div>
               <div className="flex-1">

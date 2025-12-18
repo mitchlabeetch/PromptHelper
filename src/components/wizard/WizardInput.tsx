@@ -4,14 +4,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Capability, CapabilityEnum } from "@/types/selection";
-import { Badge } from "@/components/ui/badge";
 import { clsx } from "clsx";
 import { Sparkles, DollarSign, Code, FileText, Image, Video, Music, Box, Database } from "lucide-react";
 
 const CAPABILITY_ICONS: Record<Capability, React.ReactNode> = {
   Text: <FileText className="h-4 w-4" />,
   Code: <Code className="h-4 w-4" />,
-  Image: <Image className="h-4 w-4" />,
+  Image: <Image className="h-4 w-4" aria-label="Image icon" />,
   Video: <Video className="h-4 w-4" />,
   Audio: <Music className="h-4 w-4" />,
   "3D": <Box className="h-4 w-4" />,

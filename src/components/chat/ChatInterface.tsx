@@ -43,6 +43,7 @@ export function ChatInterface() {
           onClick={resetChat} 
           className="h-8 w-8 p-0 text-zinc-500 hover:text-zinc-300 hover:bg-white/5 rounded-lg transition-colors"
           title="Reset Session"
+          aria-label="Reset chat session"
         >
           <RefreshCw className="h-4 w-4" />
         </Button>
@@ -82,16 +83,23 @@ export function ChatInterface() {
             onKeyDown={handleKeyDown}
             placeholder="Tell me what you want to create (e.g., 'I want to build a marketing video for my startup')..."
             className="min-h-[60px] max-h-[200px] bg-black/40 border-white/10 focus:border-violet-500/50 resize-none py-4 rounded-xl pr-12 text-zinc-200 placeholder:text-zinc-600"
+            aria-label="Message input"
           />
           <Button 
             size="icon" 
             className="absolute right-2 bottom-2 h-10 w-10 bg-violet-600 hover:bg-violet-500 rounded-lg shadow-[0_0_15px_rgba(124,58,237,0.3)] transition-all hover:scale-105"
             onClick={handleSend}
             disabled={isLoading || !input.trim()}
+            aria-label="Send message"
           >
             <Send className="h-5 w-5 text-white" />
           </Button>
         </div>
+        {isLoading && (
+          <div className="text-xs text-zinc-500 mt-1 animate-pulse ml-1">
+             AI Architect is typing...
+          </div>
+        )}
         <div className="text-center mt-2">
              <p className="text-[10px] text-zinc-600 font-mono">
                Powered by OpenRouter • Free Tier Architecture

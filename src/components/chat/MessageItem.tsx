@@ -3,6 +3,7 @@ import { clsx } from "clsx";
 import { Bot, User } from "lucide-react";
 import { ChatMessage } from "@/types/chat";
 import { ToolRevealArtifact } from "./ToolRevealArtifact";
+import ReactMarkdown from 'react-markdown';
 
 interface MessageItemProps {
   message: ChatMessage;
@@ -28,12 +29,16 @@ const MessageItem = memo(({ message, onSendMessage }: MessageItemProps) => {
       {/* CONTENT */}
       <div className="space-y-2 max-w-full">
         <div className={clsx(
-          "p-4 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap shadow-sm",
+          "p-4 rounded-2xl text-sm leading-relaxed shadow-sm",
           message.role === "user"
-            ? "bg-violet-600/10 border border-violet-500/20 text-violet-100 rounded-tr-none backdrop-blur-sm"
-            : "bg-white/5 border border-white/10 text-zinc-300 rounded-tl-none backdrop-blur-sm"
+            ? "bg-violet-600/10 border border-violet-500/20 text-violet-100 rounded-tr-none backdrop-blur-sm whitespace-pre-wrap"
+            : "bg-white/5 border border-white/10 text-zinc-300 rounded-tl-none backdrop-blur-sm prose prose-invert prose-sm max-w-none"
         )}>
-          {message.content}
+           {message.role === "assistant" ? (
+             <ReactMarkdown>{message.content}</ReactMarkdown>
+           ) : (
+             message.content
+           )}
         </div>
 
         {/* ARTIFACT RENDERER */}

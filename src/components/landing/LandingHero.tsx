@@ -1,6 +1,4 @@
 import { ArrowRight, Sparkles, PlayCircle, Target, Rocket, Terminal, Settings2, Compass, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 interface LandingHeroProps {
   onStart: () => void;

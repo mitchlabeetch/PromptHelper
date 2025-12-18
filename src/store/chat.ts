@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import { ChatState, ChatMessage } from '@/types/chat';
+import { ChatState } from '@/types/chat';
 
-const generateId = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+const generateId = () => crypto.randomUUID();
 
 export const useChatStore = create<ChatState>((set, get) => ({
   messages: [
@@ -58,6 +58,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       });
 
     } catch (err) {
+      console.error(err);
       addMessage({ 
         role: 'assistant', 
         content: "I encountered a connection error. Please try again." 

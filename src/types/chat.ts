@@ -1,7 +1,3 @@
-import { z } from "zod";
-import { Tool, LaunchPlan } from "./index";
-import { CapabilityEnum } from "./selection";
-
 export type MessageRole = "user" | "assistant" | "system";
 
 export interface ChatMessage {
@@ -16,6 +12,7 @@ export type ArtifactType = "TOOL_SELECTION" | "LAUNCH_PLAN" | "AMBIGUITY_CHECK" 
 
 export interface ChatArtifact {
   type: ArtifactType;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any; // Typed more specifically in components
 }
 
