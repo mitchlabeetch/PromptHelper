@@ -39,7 +39,7 @@ export function FeaturesSection() {
             <div className="glass-panel p-6 rounded-2xl hover:bg-white/5 transition-colors">
               <CheckCircle2 className="h-6 w-6 text-blue-400 mb-4" />
               <h3 className="text-lg font-bold text-white mb-2">Constraint Aware</h3>
-              <p className="text-sm text-zinc-400">Strictly respects "Free Only", "No Code", or "Open Source" filters.</p>
+              <p className="text-sm text-zinc-400">Strictly respects &quot;Free Only&quot;, &quot;No Code&quot;, or &quot;Open Source&quot; filters.</p>
             </div>
           </div>
 
@@ -50,8 +50,8 @@ export function FeaturesSection() {
                  <ArrowUpRight className="h-24 w-24 text-emerald-500" />
                </div>
                <Badge className="bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 mb-4 border-none">The Explorer</Badge>
-               <h3 className="text-2xl font-bold text-white mb-2">"I want to start using AI."</h3>
-               <p className="text-zinc-400 mb-4">You have an idea but don't know the tools. We guide you.</p>
+               <h3 className="text-2xl font-bold text-white mb-2">&quot;I want to start using AI.&quot;</h3>
+               <p className="text-zinc-400 mb-4">You have an idea but don&apos;t know the tools. We guide you.</p>
                <ul className="space-y-2 text-sm text-zinc-500">
                  <li className="flex gap-2 items-center"><div className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Avoid subscription fatigue.</li>
                  <li className="flex gap-2 items-center"><div className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Learn prompting by doing.</li>
@@ -63,7 +63,7 @@ export function FeaturesSection() {
                  <ArrowUpRight className="h-24 w-24 text-violet-500" />
                </div>
                <Badge className="bg-violet-500/10 text-violet-400 hover:bg-violet-500/20 mb-4 border-none">The Architect</Badge>
-               <h3 className="text-2xl font-bold text-white mb-2">"I need to optimize my workflow."</h3>
+               <h3 className="text-2xl font-bold text-white mb-2">&quot;I need to optimize my workflow.&quot;</h3>
                <p className="text-zinc-400 mb-4">You know AI. You just need the specs and the boilerplate.</p>
                <ul className="space-y-2 text-sm text-zinc-500">
                  <li className="flex gap-2 items-center"><div className="h-1.5 w-1.5 rounded-full bg-violet-500" /> Instant SOTA model comparison.</li>

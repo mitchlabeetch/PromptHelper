@@ -14,10 +14,11 @@ import { PlanPreview } from "@/components/landing/PlanPreview";
 import { TechSpecs } from "@/components/landing/TechSpecs";
 import { Loader2, ArrowLeft, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import Image from "next/image";
 
 export default function Home() {
-  const { step, isLoading, error, setStep } = useWizardStore();
+  const { step, error } = useWizardStore();
   const [hasStarted, setHasStarted] = useState(false);
 
   const handleStart = () => {
@@ -47,8 +48,9 @@ export default function Home() {
           </button>
           
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             {hasStarted && step === 'INPUT' && (
-              <Button variant="ghost" size="sm" onClick={handleBackToLanding} className="text-zinc-500 hover:text-white">
+              <Button variant="ghost" size="sm" onClick={handleBackToLanding} className="text-zinc-500 hover:text-white" aria-label="Back to landing page">
                  <ArrowLeft className="h-4 w-4 mr-2" /> Back
               </Button>
             )}
@@ -99,7 +101,7 @@ export default function Home() {
 
       {/* APP FLOW STATE */}
       {hasStarted && (
-        <div className="max-w-4xl mx-auto px-4 py-24 h-full min-h-screen flex flex-col">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 h-full min-h-screen flex flex-col">
           
           {/* GLOBAL ERROR STATE */}
           {error && (
@@ -114,7 +116,7 @@ export default function Home() {
               <div className="mb-8 text-center sm:text-left">
                  <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-white to-zinc-500 bg-clip-text text-transparent">Describe your vision.</h2>
                  <p className="text-zinc-400 text-sm">
-                   I'll help you refine your idea, then negotiate the perfect tool stack for you.
+                   I&apos;ll help you refine your idea, then negotiate the perfect tool stack for you.
                  </p>
               </div>
               <div className="flex-1">

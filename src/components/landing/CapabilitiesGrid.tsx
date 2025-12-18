@@ -15,7 +15,7 @@ export function CapabilitiesGrid() {
     <div className="py-20 border-t border-zinc-800/50" id="how-it-works">
        <div className="text-center mb-12">
          <h2 className="text-2xl font-bold text-white mb-4">Optimized for Every Modality</h2>
-         <p className="text-zinc-400 text-sm">We don't just pick a chatbot. We find the specialized engine for your specific need.</p>
+         <p className="text-zinc-400 text-sm">We don&apos;t just pick a chatbot. We find the specialized engine for your specific need.</p>
        </div>
        
        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">

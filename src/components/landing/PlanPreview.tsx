@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Rocket, Copy, Maximize2, Minimize2, Terminal } from "lucide-react";
+import { Rocket, Copy } from "lucide-react";
 
 export function PlanPreview() {
   return (
@@ -82,7 +82,7 @@ export function PlanPreview() {
                     <div className="relative z-10">
                        <div className="mb-8">
                           <h3 className="text-2xl font-bold text-white mb-2">Retro 8-Bit Game Generator</h3>
-                          <p className="text-zinc-400 text-sm">"Mission: Create a playable Snake clone using Python and Pygame assets."</p>
+                          <p className="text-zinc-400 text-sm">&quot;Mission: Create a playable Snake clone using Python and Pygame assets.&quot;</p>
                        </div>
 
                        <div className="space-y-6">

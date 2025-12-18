@@ -43,7 +43,7 @@ export function ChatInterface() {
           onClick={resetChat} 
           className="h-8 w-8 p-0 text-zinc-500 hover:text-zinc-300 hover:bg-white/5 rounded-lg transition-colors"
           title="Reset Session"
-          aria-label="Reset Session"
+          aria-label="Reset chat session"
         >
           <RefreshCw className="h-4 w-4" />
         </Button>
@@ -95,6 +95,11 @@ export function ChatInterface() {
             <Send className="h-5 w-5 text-white" />
           </Button>
         </div>
+        {isLoading && (
+          <div className="text-xs text-zinc-500 mt-1 animate-pulse ml-1">
+             AI Architect is typing...
+          </div>
+        )}
         <div className="text-center mt-2">
              <p className="text-[10px] text-zinc-600 font-mono">
                Powered by OpenRouter • Free Tier Architecture

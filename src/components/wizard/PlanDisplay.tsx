@@ -4,12 +4,14 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import { Copy, CheckCircle2, Rocket, Terminal, Layers, Edit2, Save, Loader2, FileText } from "lucide-react";
+import { Copy, CheckCircle2, Rocket, Terminal, Layers, Edit2, Loader2, FileText, Download, Share2 } from "lucide-react";
 import { useState } from "react";
-import { generateMarkdown, downloadFile } from "@/lib/utils/export";
+import { generateMarkdown, generatePDF } from "@/lib/utils/export";
+import { generateShareLink } from "@/lib/utils/share";
 
 export function PlanDisplay() {
   const { finalPlan, reset, setFinalPlan } = useWizardStore();
+  const [showShareSuccess, setShowShareSuccess] = useState(false);
   const [copiedStep, setCopiedStep] = useState<number | null>(null);
   
   // Revision State
@@ -25,9 +27,28 @@ export function PlanDisplay() {
     setTimeout(() => setCopiedStep(null), 2000);
   };
 
-  const handleExport = () => {
-    const md = generateMarkdown(finalPlan);
-    downloadFile(md, `${finalPlan.plan_title.replace(/\s+/g, '_')}_Plan.md`, 'text/markdown');
+  const handleExportMarkdown = () => {
+    const md = generateMarkdown(finalPlan, "Launch Plan");
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${finalPlan.plan_title.replace(/\s+/g, '_')}_Plan.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleExportPDF = () => {
+    generatePDF(finalPlan, "Launch Plan");
+  };
+
+  const handleShare = () => {
+    const url = generateShareLink(finalPlan);
+    navigator.clipboard.writeText(url);
+    setShowShareSuccess(true);
+    setTimeout(() => setShowShareSuccess(false), 2000);
   };
 
   const handleRevise = async () => {
@@ -51,6 +72,7 @@ export function PlanDisplay() {
       setIsRevising(false);
       
     } catch (err) {
+      console.error(err);
       alert("Failed to revise plan. Please try again.");
     } finally {
       setIsRevisingLoading(false);
@@ -85,7 +107,7 @@ export function PlanDisplay() {
                     <span className="font-bold text-white">{tool.tool_name}</span>
                     <Badge variant="secondary" className="text-[10px] bg-zinc-800 text-zinc-400">{tool.output_type}</Badge>
                  </div>
-                 <p className="text-xs text-zinc-500 line-clamp-2 italic">"{tool.use_case}"</p>
+                 <p className="text-xs text-zinc-500 line-clamp-2 italic">&quot;{tool.use_case}&quot;</p>
               </div>
            ))}
         </div>
@@ -195,7 +217,7 @@ export function PlanDisplay() {
       {/* OTHER INFO */}
       {finalPlan.other_information && (
           <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-xl">
-              <h3 className="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-2">Architect's Notes</h3>
+              <h3 className="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-2">Architect&apos;s Notes</h3>
               <p className="text-sm text-zinc-300">{finalPlan.other_information}</p>
           </div>
       )}
@@ -208,8 +230,15 @@ export function PlanDisplay() {
         <Button variant="ghost" className="text-zinc-500 hover:text-zinc-300" onClick={() => setIsRevising(!isRevising)}>
            <Edit2 className="h-4 w-4 mr-2" /> Adjust Plan
         </Button>
-        <Button variant="ghost" className="text-zinc-500 hover:text-zinc-300" onClick={handleExport}>
-           <FileText className="h-4 w-4 mr-2" /> Save as Markdown
+        <Button variant="ghost" className="text-zinc-500 hover:text-zinc-300" onClick={handleExportMarkdown}>
+           <FileText className="h-4 w-4 mr-2" /> Markdown
+        </Button>
+        <Button variant="ghost" className="text-zinc-500 hover:text-zinc-300" onClick={handleExportPDF}>
+           <Download className="h-4 w-4 mr-2" /> PDF
+        </Button>
+        <Button variant="ghost" className="text-zinc-500 hover:text-zinc-300" onClick={handleShare}>
+           {showShareSuccess ? <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-400" /> : <Share2 className="h-4 w-4 mr-2" />}
+           {showShareSuccess ? "Copied Link!" : "Share"}
         </Button>
       </div>
 
