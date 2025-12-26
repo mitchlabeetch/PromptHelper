@@ -1,3 +1,5 @@
+⚠️ **This Web App's development is currently on pause, potentially stopped.** It should be working and is free to be copied and adapted, but the work is currently halted as many flaws it presents are tackled way more efficiently by other tools at the moment. Thank you for your understanding 💝
+
 # 🚀 PromptHelper (WhiteInputSyndrome)
 
 > **Conquer your creative block. Turn vague ideas into battle-ready AI execution plans.**
