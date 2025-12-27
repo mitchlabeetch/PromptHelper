@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { callOpenRouter, parseJSONResponse } from "@/lib/api/openrouter";
+import { rateLimit } from "@/lib/rate-limit";
 
 // Schema for input validation
 const ChatRequestSchema = z.object({
@@ -64,6 +65,16 @@ IMPORTANT:
 
 export async function POST(req: Request) {
   try {
+    // 1. Rate Limiting Check
+    const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    const { success } = rateLimit(ip, 10, 60000); // 10 reqs per min
+    if (!success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
 
     // Validate request body

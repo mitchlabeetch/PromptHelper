@@ -3,6 +3,7 @@ import { z } from "zod";
 import { callOpenRouter, parseJSONResponse } from "@/lib/api/openrouter";
 import toolsDB from "@/data/tools_database.json";
 import bestPractices from "@/data/best_practices.json";
+import { rateLimit } from "@/lib/rate-limit";
 
 // Input: The User Request + The Tool ID they selected
 const PlanRequestSchema = z.object({
@@ -34,6 +35,15 @@ const PlanResponseSchema = z.object({
 
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    const { success } = rateLimit(ip, 5, 60000); // 5 reqs per min (heavier operation)
+    if (!success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const { userRequest, selectedToolId } = PlanRequestSchema.parse(body);
 

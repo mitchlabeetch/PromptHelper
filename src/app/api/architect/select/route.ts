@@ -2,11 +2,21 @@ import { NextResponse } from "next/server";
 import { callOpenRouter, parseJSONResponse } from "@/lib/api/openrouter";
 import { SelectionRequestSchema } from "@/types/selection";
 import { filterCandidates } from "@/lib/selection/hard-filter";
+import { rateLimit } from "@/lib/rate-limit";
 
 const InputSchema = SelectionRequestSchema;
 
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    const { success } = rateLimit(ip, 5, 60000); // 5 reqs per min (heavy logic)
+    if (!success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     // A. Parse Body
     const body = await req.json();
     const parsedBody = InputSchema.parse(body);
