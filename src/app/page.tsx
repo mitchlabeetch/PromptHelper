@@ -2,12 +2,11 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useWizardStore } from "@/store/wizard";
-import { ChatInterface } from "@/components/chat/ChatInterface";
-import { ToolReveal } from "@/components/wizard/ToolReveal";
-import { PlanDisplay } from "@/components/wizard/PlanDisplay";
 import { LandingHero } from "@/components/landing/LandingHero";
 import { CapabilitiesGrid } from "@/components/landing/CapabilitiesGrid";
+import { ComponentLoader } from "@/components/ui/ComponentLoader";
 import { ProcessTimeline } from "@/components/landing/ProcessTimeline";
 import { FeaturesSection } from "@/components/landing/FeaturesSection";
 import { PlanPreview } from "@/components/landing/PlanPreview";
@@ -16,6 +15,31 @@ import { Loader2, ArrowLeft, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import Image from "next/image";
+
+// Dynamic Imports for Performance
+const ChatInterface = dynamic(
+  () => import("@/components/chat/ChatInterface").then((mod) => mod.ChatInterface),
+  {
+    loading: () => <ComponentLoader text="Loading Interface..." />,
+    ssr: false,
+  }
+);
+
+const ToolReveal = dynamic(
+  () => import("@/components/wizard/ToolReveal").then((mod) => mod.ToolReveal),
+  {
+    loading: () => <ComponentLoader text="Loading Result..." />,
+    ssr: false,
+  }
+);
+
+const PlanDisplay = dynamic(
+  () => import("@/components/wizard/PlanDisplay").then((mod) => mod.PlanDisplay),
+  {
+    loading: () => <ComponentLoader text="Loading Plan..." />,
+    ssr: false,
+  }
+);
 
 export default function Home() {
   const { step, error } = useWizardStore();
