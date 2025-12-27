@@ -64,8 +64,12 @@ export function ChatInterface() {
             <div className="h-8 w-8 rounded-full bg-violet-500/10 text-violet-400 flex items-center justify-center animate-pulse border border-violet-500/20">
               <Bot className="h-4 w-4" />
             </div>
-            <div className="bg-white/5 border border-white/10 p-4 rounded-2xl rounded-tl-none flex items-center gap-2 text-zinc-500 text-sm backdrop-blur-sm">
-              <Loader2 className="h-3 w-3 animate-spin" />
+            <div
+              className="bg-white/5 border border-white/10 p-4 rounded-2xl rounded-tl-none flex items-center gap-2 text-zinc-500 text-sm backdrop-blur-sm"
+              role="status"
+              aria-live="polite"
+            >
+              <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
               Thinking...
             </div>
           </div>
@@ -96,7 +100,11 @@ export function ChatInterface() {
           </Button>
         </div>
         {isLoading && (
-          <div className="text-xs text-zinc-500 mt-1 animate-pulse ml-1">
+          <div
+            className="text-xs text-zinc-500 mt-1 animate-pulse ml-1"
+            role="status"
+            aria-live="polite"
+          >
              AI Architect is typing...
           </div>
         )}
