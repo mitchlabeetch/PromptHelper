@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { callOpenRouter, parseJSONResponse } from "@/lib/api/openrouter";
+import { rateLimiter } from "@/lib/rate-limit";
 import toolsDB from "@/data/tools_database.json";
 import bestPractices from "@/data/best_practices.json";
 
@@ -34,6 +35,15 @@ const PlanResponseSchema = z.object({
 
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
+
+    if (!rateLimiter.check(ip)) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const { userRequest, selectedToolId } = PlanRequestSchema.parse(body);
 
