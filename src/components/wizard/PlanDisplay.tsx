@@ -176,7 +176,7 @@ export function PlanDisplay() {
 
                 {/* PROMPT CODE BLOCK */}
                 <div className="relative group">
-                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-10">
                     <Button 
                       size="sm" 
                       className="h-8 text-xs bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700"
