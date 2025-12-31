@@ -2,13 +2,14 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { callOpenRouter, parseJSONResponse } from "@/lib/api/openrouter";
 import { rateLimiter } from "@/lib/rate-limit";
+import { getIP } from "@/lib/utils/ip";
 import toolsDB from "@/data/tools_database.json";
 import bestPractices from "@/data/best_practices.json";
 
 // Input: The User Request + The Tool ID they selected
 const PlanRequestSchema = z.object({
-  userRequest: z.string(),
-  selectedToolId: z.string()
+  userRequest: z.string().max(5000), // Limit input length to prevent DoS
+  selectedToolId: z.string().max(100)
 });
 
 // Output: The Launch Plan
@@ -35,7 +36,7 @@ const PlanResponseSchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    const ip = getIP(req);
 
     if (!rateLimiter.check(ip)) {
       return NextResponse.json(
