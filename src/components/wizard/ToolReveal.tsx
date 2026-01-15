@@ -81,8 +81,9 @@ export function ToolReveal() {
             <a 
               href={selectedTool.website_url} 
               target="_blank" 
-              rel="noreferrer" 
+              rel="noopener noreferrer"
               className="text-zinc-500 hover:text-zinc-300 text-sm flex items-center gap-2 transition-colors"
+              aria-label="Visit Website (opens in a new tab)"
             >
               Visit Website <ExternalLink className="h-3 w-3" />
             </a>
