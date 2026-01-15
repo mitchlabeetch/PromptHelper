@@ -1,14 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { callOpenRouter, parseJSONResponse } from "@/lib/api/openrouter";
 import { rateLimiter } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/utils/ip";
 import { SelectionRequestSchema } from "@/types/selection";
 import { filterCandidates } from "@/lib/selection/hard-filter";
 
 const InputSchema = SelectionRequestSchema;
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    const ip = getClientIp(req);
 
     if (!rateLimiter.check(ip)) {
       return NextResponse.json(
