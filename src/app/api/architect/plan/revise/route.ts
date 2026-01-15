@@ -1,6 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { z } from "zod";
 import { callOpenRouter, parseJSONResponse } from "@/lib/api/openrouter";
+import { rateLimiter } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/utils/ip";
 
 // Input: The Current Plan + Revision Instruction
 const ReviseRequestSchema = z.object({
@@ -8,8 +10,17 @@ const ReviseRequestSchema = z.object({
   userInstruction: z.string()
 });
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+
+    if (!rateLimiter.check(ip)) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const { currentPlan, userInstruction } = ReviseRequestSchema.parse(body);
 

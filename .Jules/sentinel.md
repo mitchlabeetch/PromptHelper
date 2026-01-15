@@ -1,0 +1,4 @@
+## 2025-05-23 - IP Spoofing Prevention in Rate Limiting
+**Vulnerability:** API routes were extracting the client IP using `req.headers.get("x-forwarded-for") || "unknown"`. This allowed attackers to bypass rate limits by spoofing the `x-forwarded-for` header (e.g., appending fake IPs to the list), as the rate limiter used the entire string as the key.
+**Learning:** Naive extraction of `x-forwarded-for` without validation or normalization makes IP-based controls ineffective. In Next.js App Router, `NextRequest.ip` provides a reliable, platform-normalized IP address (e.g., on Vercel).
+**Prevention:** Always use a centralized `getClientIp` helper that prioritizes `req.ip` (from `NextRequest`) and falls back to strictly parsing the *first* IP in `x-forwarded-for` if `req.ip` is unavailable. Never blindly trust the raw header string.

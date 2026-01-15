@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { z } from "zod";
 import { callOpenRouter, parseJSONResponse } from "@/lib/api/openrouter";
 import { rateLimiter } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/utils/ip";
 
 // Schema for input validation
 const ChatRequestSchema = z.object({
@@ -63,9 +64,9 @@ IMPORTANT:
 - Be friendly and conversational, not robotic.
 `;
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    const ip = getClientIp(req);
 
     if (!rateLimiter.check(ip)) {
       return NextResponse.json(
