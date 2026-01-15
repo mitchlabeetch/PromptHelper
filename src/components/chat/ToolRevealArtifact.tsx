@@ -122,7 +122,13 @@ export function ToolRevealArtifact({ selectionData }: ToolRevealArtifactProps) {
        </CardContent>
 
        <CardFooter className="bg-black/40 pt-4 pb-4 flex justify-between items-center border-t border-white/5 relative z-10">
-          <a href={tool.website_url} target="_blank" className="text-xs text-zinc-500 hover:text-white flex items-center gap-1 transition-colors">
+          <a
+            href={tool.website_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-zinc-500 hover:text-white flex items-center gap-1 transition-colors"
+            aria-label="Visit Website (opens in a new tab)"
+          >
              Visit Website <ExternalLink className="h-3 w-3" />
           </a>
           <Button size="sm" onClick={handleProceed} className="bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold shadow-[0_0_20px_rgba(139,92,246,0.3)] border border-violet-500/50">
